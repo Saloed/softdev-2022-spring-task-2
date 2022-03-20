@@ -1,38 +1,36 @@
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
-import java.io.IOException
+import kotlinx.cli.vararg
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
 import kotlin.io.path.exists
 
-fun readDirectory(directory: String, subdirectories: Boolean, fileName: String): List<String> {
-    try {
-        if (subdirectories) {
-            return Files.walk(Paths.get(directory))
-                .filter { Files.isRegularFile(it) && it.toFile().name == fileName }
-                .map { it.toFile().absolutePath }
-                .collect(Collectors.toList())
-        } else {
-            val pathToFile = if (directory.isEmpty())
-                Paths.get(fileName)
-            else
-                Paths.get("$directory\\$fileName")
-
-            val pathToDirectory = Paths.get(directory)
-
-            if (!pathToDirectory.exists()) {
-                println(Constants.WRONG_DIRECTORY_PATH)
+fun readDirectory(directory: String, subdirectories: Boolean, vararg fileNames: String): List<String> {
+    val result = mutableListOf<String>()
+    val pathToDirectory = Paths.get(directory)
+    if (!pathToDirectory.exists()) {
+        println(Constants.WRONG_DIRECTORY_PATH)
+    } else {
+        for (fileName in fileNames) {
+            if (subdirectories) {
+                result.addAll(Files.walk(Paths.get(directory))
+                    .filter { Files.isRegularFile(it) && it.toFile().name == fileName }
+                    .map { it.toFile().absolutePath }
+                    .collect(Collectors.toList()))
             } else {
+                val pathToFile = if (directory.isEmpty())
+                    Paths.get(fileName)
+                else
+                    Paths.get("$directory\\$fileName")
+
                 if (pathToFile.exists())
-                    return listOf(pathToFile.toFile().absolutePath)
+                    result.add(pathToFile.toFile().absolutePath)
             }
         }
-    } catch (e: IOException) {
-        println(Constants.WRONG_DIRECTORY_PATH)
     }
-    return listOf()
+    return result
 }
 
 fun printData(data: List<String>) {
@@ -53,10 +51,10 @@ fun main(args: Array<String>) {
         shortName = Constants.DIRECTORY_SHORT_NAME,
         description = Constants.DIRECTORY_DESCRIPTION
     ).default("")
-    val fileName by parser.argument(ArgType.String, description = Constants.FILENAME_DESCRIPTION)
+    val fileName by parser.argument(ArgType.String, description = Constants.FILENAME_DESCRIPTION).vararg()
 
     parser.parse(args)
-    val resultData = readDirectory(directory, subdirectories, fileName)
+    val resultData = readDirectory(directory, subdirectories, *fileName.toTypedArray())
     printData(resultData)
 }
 
