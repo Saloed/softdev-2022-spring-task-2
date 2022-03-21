@@ -7,35 +7,35 @@ import java.nio.file.Paths
 import java.util.stream.Collectors
 import kotlin.io.path.exists
 
-fun readDirectory(directory: String, subdirectories: Boolean, vararg fileNames: String): List<String> {
-    val result = mutableListOf<String>()
+fun readDirectory(directory: String, subdirectories: Boolean, vararg fileNames: String): UtilResult {
     val pathToDirectory = Paths.get(directory)
-    if (!pathToDirectory.exists()) {
-        println(Constants.WRONG_DIRECTORY_PATH)
-    } else {
-        for (fileName in fileNames) {
-            if (subdirectories) {
-                result.addAll(Files.walk(Paths.get(directory))
-                    .filter { Files.isRegularFile(it) && it.toFile().name == fileName }
-                    .map { it.toFile().absolutePath }
-                    .collect(Collectors.toList()))
-            } else {
-                val pathToFile = if (directory.isEmpty())
-                    Paths.get(fileName)
-                else
-                    Paths.get("$directory\\$fileName")
+    if (!pathToDirectory.exists())
+        return UtilResult.Error(Constants.WRONG_DIRECTORY_PATH)
 
-                if (pathToFile.exists())
-                    result.add(pathToFile.toFile().absolutePath)
-            }
+    val resultList = mutableListOf<String>()
+    for (fileName in fileNames) {
+        if (subdirectories) {
+            resultList.addAll(Files.walk(Paths.get(directory))
+                .filter { Files.isRegularFile(it) && it.toFile().name == fileName }
+                .map { it.toFile().absolutePath }
+                .collect(Collectors.toList()))
+        } else {
+            val pathToFile = if (directory.isEmpty())
+                Paths.get(fileName)
+            else
+                Paths.get("$directory\\$fileName")
+
+            if (pathToFile.exists())
+                resultList.add(pathToFile.toFile().absolutePath)
         }
     }
-    return result
+    return UtilResult.Success(resultList)
 }
 
-fun printData(data: List<String>) {
-    data.forEach {
-        println(it)
+fun printResult(result: UtilResult) {
+    when (result) {
+        is UtilResult.Success -> result.data.forEach { println(it) }
+        is UtilResult.Error -> println(result)
     }
 }
 
@@ -54,8 +54,8 @@ fun main(args: Array<String>) {
     val fileName by parser.argument(ArgType.String, description = Constants.FILENAME_DESCRIPTION).vararg()
 
     parser.parse(args)
-    val resultData = readDirectory(directory, subdirectories, *fileName.toTypedArray())
-    printData(resultData)
+    val result = readDirectory(directory, subdirectories, *fileName.toTypedArray())
+    printResult(result)
 }
 
 
