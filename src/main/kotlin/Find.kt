@@ -2,7 +2,6 @@ import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
 import kotlinx.cli.vararg
-import java.io.File.separator
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
@@ -21,11 +20,8 @@ fun readDirectory(directory: String, subdirectories: Boolean, vararg fileNames: 
                 .map { it.toFile().absolutePath }
                 .collect(Collectors.toList()))
         } else {
-            val pathToFile = if (directory.isEmpty())
-                Paths.get(fileName)
-            else
-                Paths.get("$directory$separator$fileName")
-            if (pathToFile.exists())
+            val pathToFile = pathToDirectory.resolve(fileName)
+            if(pathToFile.exists())
                 resultList.add(pathToFile.toFile().absolutePath)
         }
     }
