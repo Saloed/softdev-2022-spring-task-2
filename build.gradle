@@ -13,12 +13,22 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-test-junit5"
 }
 
+compileKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes 'Main-Class': 'GrepLauncher'
     }
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }
+
 tasks.test {
     useJUnitPlatform()
 }
