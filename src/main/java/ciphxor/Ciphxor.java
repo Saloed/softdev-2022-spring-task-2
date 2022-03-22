@@ -30,7 +30,6 @@ public class Ciphxor {
             parser.printUsage(System.err);
         }
         try {
-            String key;
             if (outputFileName.isEmpty()) outputFileName = inputFileName + ".ciph";
             try (FileInputStream inputStream = new FileInputStream(inputFileName)) {
                 try (FileOutputStream outputStream = new FileOutputStream(outputFileName)) {
