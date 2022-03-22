@@ -1,0 +1,24 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'args4j', name: 'args4j', version: '2.0.25'
+    implementation group: 'args4j', name: 'args4j-site', version: '2.0.25'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "org.jetbrains.kotlin:kotlin-test-junit5"
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'GrepLauncher'
+    }
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+tasks.test {
+    useJUnitPlatform()
+}
