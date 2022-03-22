@@ -13,14 +13,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-test-junit5"
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "17"
-}
-
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "17"
-}
-
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
