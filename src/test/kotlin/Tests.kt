@@ -10,35 +10,37 @@ import kotlin.test.assertEquals
 
 class Tests {
     companion object {
-        private const val TEST_DIR = "./build/testDir"
-        private const val TEST_SUB_DIR = "./build/testDir/testSubDir"
+        private val TEST_DIR = Paths.get(".").resolve("build").resolve("testDir")
+        private val TEST_SUB_DIR = TEST_DIR.resolve("testSubDir")
         private const val TEST_FILE_NAME = "file.txt"
     }
 
     @Before
     fun before() {
-        Files.createDirectory(Paths.get(TEST_DIR))
-        Files.createDirectory(Paths.get(TEST_SUB_DIR))
-        Files.createFile(Paths.get("$TEST_DIR/$TEST_FILE_NAME"))
-        Files.createFile(Paths.get("$TEST_SUB_DIR/$TEST_FILE_NAME"))
+        Files.createDirectory(TEST_DIR)
+        Files.createDirectory(TEST_SUB_DIR)
+        Files.createFile(TEST_DIR.resolve(TEST_FILE_NAME))
+        Files.createFile(TEST_SUB_DIR.resolve(TEST_FILE_NAME))
     }
 
     @Test
     fun withoutSubDirTest() {
         assertEquals(
-            UtilResult.Success(listOf(Paths.get("$TEST_DIR/$TEST_FILE_NAME").absolutePathString())),
-            readDirectory(TEST_DIR, false, TEST_FILE_NAME)
+            UtilResult.Success(listOf(TEST_DIR.resolve(TEST_FILE_NAME).absolutePathString())),
+            readDirectory(TEST_DIR.absolutePathString(), false, TEST_FILE_NAME)
         )
     }
 
     @Test
     fun withSubDirTest() {
         assertEquals(
-            UtilResult.Success(listOf(
-                Paths.get("$TEST_DIR/$TEST_FILE_NAME").absolutePathString(),
-                Paths.get("$TEST_SUB_DIR/$TEST_FILE_NAME").absolutePathString()
-            )), readDirectory(
-                TEST_DIR, true, TEST_FILE_NAME
+            UtilResult.Success(
+                listOf(
+                    TEST_DIR.resolve(TEST_FILE_NAME).absolutePathString(),
+                    TEST_SUB_DIR.resolve(TEST_FILE_NAME).absolutePathString()
+                )
+            ), readDirectory(
+                TEST_DIR.absolutePathString(), true, TEST_FILE_NAME
             )
         )
     }
@@ -50,12 +52,12 @@ class Tests {
 
     @Test
     fun wrongFileNamePathTest() {
-        assertEquals(UtilResult.Success(listOf()), readDirectory(TEST_DIR, false, "fgkgfjdk"))
+        assertEquals(UtilResult.Success(listOf()), readDirectory(TEST_DIR.absolutePathString(), false, "fgkgfjdk"))
     }
 
     @After
     fun after() {
-        Files.walk(Paths.get(TEST_DIR))
+        Files.walk(TEST_DIR)
             .sorted(Comparator.reverseOrder())
             .map(Path::toFile)
             .forEach(File::delete)
