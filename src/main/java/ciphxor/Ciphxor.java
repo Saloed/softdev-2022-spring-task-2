@@ -1,5 +1,7 @@
 package ciphxor;
 
+import org.apache.commons.codec.binary.Hex;
+import org.codehaus.plexus.util.IOUtil;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -31,57 +33,60 @@ public class Ciphxor {
         }
         try {
             if (outputFileName.isEmpty()) outputFileName = inputFileName + ".ciph";
-            try (FileInputStream inputStream = new FileInputStream(inputFileName)) {
-                try (FileOutputStream outputStream = new FileOutputStream(outputFileName)) {
-                    try (InputStreamReader reader = new InputStreamReader(inputStream)) {
-                        try (OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
-                            int str = reader.read();
-                            StringBuilder input = new StringBuilder();
-                            while (str != -1) {
-                                input.append((char) str);
-                                str = reader.read();
-                            }
-                            System.out.println(input);
-                            String output;
-                            if (encryptionKey != null) output = cipher(input.toString(), encryptionKey);
-                            else output = decipher(input.toString(), decryptionKey);
-                            System.out.println(output);
-                            writer.write(output);
-                        }
-                    }
+            try (FileInputStream inputStream = new FileInputStream(inputFileName);
+                 FileOutputStream outputStream = new FileOutputStream(outputFileName);
+                 OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
+                String output;
+                if (encryptionKey == null) {
+                    String inputHex = IOUtil.toString(inputStream);
+                    output = decipher(hexToByte(inputHex), decryptionKey);
                 }
+                else {
+                    byte[] input = inputStream.readAllBytes();
+                    byte[] byteOutput = cipher(input, encryptionKey);
+                    output = Hex.encodeHexString(byteOutput);
+                }
+                inputStream.close();
+                System.out.println(output);
+                writer.write(output);
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    public static String cipher(String val, String key) {
-        StringBuilder result = new StringBuilder();
-        int counter = 0;
-        int max = key.length() + 1 - (key.length() + 1) % 4;
-        for (int i = 0; i < val.length(); i++) {
-            if (counter + 3 >= max) counter = 0;
-            String part = key.substring(counter, counter + 3);
-            int k = ((int) val.charAt(i) ^ Integer.parseInt(part, 16));
-            StringBuilder c = new StringBuilder(Integer.toHexString(k));
-            while (c.length() != 4) c.append("0");
-            result.append(c);
-            counter += 4;
+    public static byte[] hexToByte(String hex) {
+        int len;
+        if (hex.length() % 2 == 0) len = hex.length();
+        else len = hex.length() - 1;
+        byte[] result = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            result[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) +
+                    Character.digit(hex.charAt(i + 1), 16));
         }
-        return result.toString();
+        return result;
     }
 
-    public static String decipher(String val, String key) {
-        StringBuilder result = new StringBuilder();
+    public static byte[] cipher(byte[] val, String stringKey) {
+        byte[] key = hexToByte(stringKey);
+        byte[] result = new byte[val.length];
         int counter = 0;
-        int max = key.length() + 1 - (key.length() + 1) % 4;
-        for (int i = 0; i < val.length(); i += 4) {
-            if (counter + 3 >= max) counter = 0;
-            String part = key.substring(counter, counter + 3);
-            char k = (char) (Integer.parseInt(val.substring(i, i + 3), 16) ^ Integer.parseInt(part, 16));
-            result.append(k);
-            counter += 4;
+        for (int i = 0; i < val.length; i++) {
+            if (counter == key.length) counter = 0;
+            result[i] = (byte) (val[i] ^ key[counter]);
+            counter += 1;
+        }
+        return result;
+    }
+
+    public static String decipher(byte[] val, String stringKey) {
+        StringBuilder result = new StringBuilder();
+        byte[] key = hexToByte(stringKey);
+        int counter = 0;
+        for (byte aByte : val) {
+            if (counter == key.length) counter = 0;
+            result.append((char) (aByte ^ key[counter]));
+            counter += 1;
         }
         return result.toString();
     }

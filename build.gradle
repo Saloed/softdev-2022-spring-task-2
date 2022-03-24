@@ -13,6 +13,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     implementation 'org.kohsuke.args4j:args4j-maven-plugin:2.33'
+    implementation'commons-codec:commons-codec:1.15'
 }
 
 jar {
