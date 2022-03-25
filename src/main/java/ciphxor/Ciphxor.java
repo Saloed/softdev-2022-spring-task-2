@@ -81,17 +81,5 @@ public class Ciphxor {
         }
         return result;
     }
-
-    public static String decipher(byte[] val, String stringKey) {
-        StringBuilder result = new StringBuilder();
-        byte[] key = hexToByte(stringKey);
-        int counter = 0;
-        for (byte aByte : val) {
-            if (counter == key.length) counter = 0;
-            result.append((char) (aByte ^ key[counter]));
-            counter += 1;
-        }
-        return result.toString();
-    }
 }
 
