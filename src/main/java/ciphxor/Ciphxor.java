@@ -1,13 +1,15 @@
 package ciphxor;
 
-import org.apache.commons.codec.binary.Hex;
-import org.codehaus.plexus.util.IOUtil;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 public class Ciphxor {
     @Option(name = "-c", forbids = "-d")
@@ -30,6 +32,7 @@ public class Ciphxor {
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
+            return;
         }
         try {
             if (outputFileName.isEmpty()) outputFileName = inputFileName + ".ciph";
@@ -38,17 +41,17 @@ public class Ciphxor {
                  OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
                 String output;
                 if (encryptionKey == null) {
-                    String inputHex = IOUtil.toString(inputStream);
-                    output = decipher(hexToByte(inputHex), decryptionKey);
+                    byte[] input = inputStream.readAllBytes();
+                    byte[] byteOutput = cipher(input, decryptionKey);
+                    output = new String(byteOutput, StandardCharsets.UTF_8);
+                    writer.write(output);
+                    System.out.println(output);
                 }
                 else {
                     byte[] input = inputStream.readAllBytes();
                     byte[] byteOutput = cipher(input, encryptionKey);
-                    output = Hex.encodeHexString(byteOutput);
+                    outputStream.write(byteOutput);
                 }
-                inputStream.close();
-                System.out.println(output);
-                writer.write(output);
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
