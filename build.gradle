@@ -16,7 +16,7 @@ dependencies {
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
-        attributes 'Main-Class': 'GrepLauncher'
+        attributes 'Main-Class': 'GrepLauncherKt'
     }
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }

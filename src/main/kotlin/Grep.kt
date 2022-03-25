@@ -9,36 +9,17 @@ class Grep {
         val inputStrings = File(inputName).readLines()
         inputStrings.forEach {
             if (r) {
-                if (i) {
-                    if (!it.lowercase().contains(Regex(word.lowercase())) && v) {
-                        println(it)
-                        list.add(it)
-                    }
-                    if (it.lowercase().contains(Regex(word.lowercase())) && !v) {
-                        println(it)
-                        list.add(it)
-                    }
-                } else {
-                    if (!it.contains(Regex(word)) && v) {
-                        println(it)
-                        list.add(it)
-                    }
-                    if (it.contains(Regex(word)) && !v) {
-                        println(it)
-                        list.add(it)
-                    }
-                }
+                if (!isToLowercase(i, it).contains(Regex(isToLowercase(i, word))) && v) list.add(it)
+                if (isToLowercase(i, it).contains(Regex(isToLowercase(i, word))) && !v) list.add(it)
             } else {
-                if (!it.contains(word, ignoreCase = i) && v) {
-                    println(it)
-                    list.add(it)
-                }
-                if (it.contains(word, ignoreCase = i) && !v) {
-                    println(it)
-                    list.add(it)
-                }
+                if (!it.contains(word, ignoreCase = i) && v) list.add(it)
+                if (it.contains(word, ignoreCase = i) && !v) list.add(it)
             }
         }
+        list.forEach { println(it) }
         return list
+    }
+    private fun isToLowercase(i: Boolean, s: String): String {
+        return if (i) s.lowercase() else s
     }
 }
