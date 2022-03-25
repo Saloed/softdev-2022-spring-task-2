@@ -12,7 +12,7 @@ fun readDirectory(directory: String, subdirectories: Boolean, vararg fileNames: 
     if (!pathToDirectory.exists())
         return UtilResult.Error(Constants.WRONG_DIRECTORY_PATH)
 
-    val resultList = mutableListOf<String>()
+    val resultList = mutableSetOf<String>()
     for (fileName in fileNames) {
         if (subdirectories) {
             resultList.addAll(Files.walk(Paths.get(directory))

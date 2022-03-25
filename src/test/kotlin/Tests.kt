@@ -26,7 +26,7 @@ class Tests {
     @Test
     fun withoutSubDirTest() {
         assertEquals(
-            UtilResult.Success(listOf(TEST_DIR.resolve(TEST_FILE_NAME).absolutePathString())),
+            UtilResult.Success(setOf(TEST_DIR.resolve(TEST_FILE_NAME).absolutePathString())),
             readDirectory(TEST_DIR.absolutePathString(), false, TEST_FILE_NAME)
         )
     }
@@ -35,7 +35,7 @@ class Tests {
     fun withSubDirTest() {
         assertEquals(
             UtilResult.Success(
-                listOf(
+                setOf(
                     TEST_DIR.resolve(TEST_FILE_NAME).absolutePathString(),
                     TEST_SUB_DIR.resolve(TEST_FILE_NAME).absolutePathString()
                 )
@@ -52,7 +52,7 @@ class Tests {
 
     @Test
     fun wrongFileNamePathTest() {
-        assertEquals(UtilResult.Success(listOf()), readDirectory(TEST_DIR.absolutePathString(), false, "fgkgfjdk"))
+        assertEquals(UtilResult.Success(emptySet()), readDirectory(TEST_DIR.absolutePathString(), false, "fgkgfjdk"))
     }
 
     @After
