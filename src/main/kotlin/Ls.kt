@@ -93,10 +93,8 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
 
     @Throws(IOException::class)
     fun writeToFile(fileList: ArrayList<String>) {
-        if (outputFile != null) {
-            File(outputFile).bufferedWriter().use {
+            File(outputFile!!).bufferedWriter().use {
                 for (file in fileList) it.write(file)
-            }
             println("Information is recorded in $outputFile")
         }
     }
@@ -115,4 +113,3 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
         return result
     }
 }
-

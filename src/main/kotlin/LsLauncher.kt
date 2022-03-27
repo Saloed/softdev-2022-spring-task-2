@@ -42,4 +42,3 @@ class LsLauncher {
 fun main(args: Array<String>) {
     LsLauncher().launch(args)
 }
-
