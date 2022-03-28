@@ -8,8 +8,6 @@ import org.kohsuke.args4j.Option;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 
 public class Ciphxor {
     @Option(name = "-c", forbids = "-d")
@@ -37,21 +35,13 @@ public class Ciphxor {
         try {
             if (outputFileName.isEmpty()) outputFileName = inputFileName + ".ciph";
             try (FileInputStream inputStream = new FileInputStream(inputFileName);
-                 FileOutputStream outputStream = new FileOutputStream(outputFileName);
-                 OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
+                 FileOutputStream outputStream = new FileOutputStream(outputFileName)) {
                 String output;
-                if (encryptionKey == null) {
-                    byte[] input = inputStream.readAllBytes();
-                    byte[] byteOutput = cipher(input, decryptionKey);
-                    output = new String(byteOutput, StandardCharsets.UTF_8);
-                    writer.write(output);
-                    System.out.println(output);
-                }
-                else {
-                    byte[] input = inputStream.readAllBytes();
-                    byte[] byteOutput = cipher(input, encryptionKey);
-                    outputStream.write(byteOutput);
-                }
+                byte[] input = inputStream.readAllBytes();
+                byte[] byteOutput;
+                if (encryptionKey == null) byteOutput = cipher(input, decryptionKey);
+                else byteOutput = cipher(input, encryptionKey);
+                outputStream.write(byteOutput);
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
