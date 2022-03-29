@@ -1,10 +1,10 @@
 package ciphxor;
-import org.apache.commons.codec.binary.Hex;
+
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CiphxorTest {
     @Test

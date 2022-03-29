@@ -36,7 +36,6 @@ public class Ciphxor {
             if (outputFileName.isEmpty()) outputFileName = inputFileName + ".ciph";
             try (FileInputStream inputStream = new FileInputStream(inputFileName);
                  FileOutputStream outputStream = new FileOutputStream(outputFileName)) {
-                String output;
                 byte[] input = inputStream.readAllBytes();
                 byte[] byteOutput;
                 if (encryptionKey == null) byteOutput = cipher(input, decryptionKey);
