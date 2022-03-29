@@ -1,0 +1,21 @@
+plugins {
+    id "java"
+
+}
+
+group 'org.example'
+version '1.12'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation('com.google.guava:guava:31.1-jre')
+    implementation("org.kohsuke:file-leak-detector:1.8")
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.8.2')
+}
+
+test {
+    useJUnitPlatform()
+}
