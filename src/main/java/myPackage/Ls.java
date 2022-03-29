@@ -13,24 +13,24 @@ import java.util.*;
 
 public class Ls {
     public static void main(String[] args) throws CmdLineException, IOException {
-        LsArgs values = new LsArgs(args);//обрабатываем аргументы из консоли
-        File folder = new File(values.getDirectory()); //директори или файл(название геттера деректории из того файла)
-        File[] list;//список файлов в дериктории
+        LsArgs values = new LsArgs(args);
+        File folder = new File(values.getDirectory());
+        File[] list;
 
-        if (folder.isFile()) { //проверяем на то, файл это или папка
-            list = new File[]{folder}; //массив с типом File,который состоит из 1 аргумента
+        if (folder.isFile()) {
+            list = new File[]{folder};
         } else {
-            list = folder.listFiles(); //получаю из папки список файлов
+            list = folder.listFiles();
         }
 
         if (values.isReversed()) {
-            List<File> reversed = Arrays.asList(list);//массиы делается List
-            Collections.reverse(reversed);//переворачиваем список
-            list = reversed.toArray(list);//обратно делаем из списка массив
+            List<File> reversed = Arrays.asList(list);
+            Collections.reverse(reversed);
+            list = reversed.toArray(list);
         }
         String result = "";
         if (!values.isLong()) {
-            result = getNames(list);//если не -l то просто выводим список имен
+            result = getNames(list);
         } else {
             if (!values.isHumanReadble()) {
                 result = getLongInfo(list);
@@ -45,14 +45,14 @@ public class Ls {
             writer.write(result);
             writer.close();
         } else {
-            System.out.print(result);//вывод в консоль если нет файла для вывода
+            System.out.print(result);
         }
     }
 
     private static String getNames(File[] list) {
         StringBuilder sb = new StringBuilder();
         for (File file : list) {
-            sb.append(file.getName() + System.lineSeparator()); //добавляем имя файла и перенос строки
+            sb.append(file.getName() + System.lineSeparator());
         }
         return sb.toString();
     }
@@ -70,12 +70,12 @@ public class Ls {
             else sb.append(0);
 
             sb.append(" ");
-            Path path = Path.of(file.getAbsolutePath());//путь к файлу
-            sb.append(Files.size(path));//выводим размер файла в байтах
+            Path path = Path.of(file.getAbsolutePath());
+            sb.append(Files.size(path));
             sb.append(" ");
-            sb.append(Files.getLastModifiedTime(path));//время и дата последнего изменения
+            sb.append(Files.getLastModifiedTime(path));
             sb.append(" ");
-            sb.append(file.getName() + System.lineSeparator()); //добавляем имя файла и перенос строки
+            sb.append(file.getName() + System.lineSeparator());
         }
         return sb.toString();
     }
@@ -93,14 +93,14 @@ public class Ls {
             else sb.append("-");
 
             sb.append(" ");
-            Path path = Path.of(file.getAbsolutePath());//путь к файлу
-            long size = Files.size(path); // получаем размер файла
-            sb.append(sizeForHuman(size));//выводим размер файла в удобном виде
+            Path path = Path.of(file.getAbsolutePath());
+            long size = Files.size(path);
+            sb.append(sizeForHuman(size));
             sb.append(" ");
             FileTime time = Files.getLastModifiedTime(path);
-            sb.append(timeForHuman(time));//время и дата последнего изменения
+            sb.append(timeForHuman(time));
             sb.append(" ");
-            sb.append(file.getName() + System.lineSeparator()); //добавляем имя файла и перенос строки
+            sb.append(file.getName() + System.lineSeparator());
         }
         return sb.toString();
     }
