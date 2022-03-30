@@ -8,7 +8,7 @@ import java.util.*
 class Find {
     fun find(directory: String, subdirectory: Boolean, fileNames: Set<String>): Set<String> {
 
-        val result = mutableListOf<String>()
+        val result = mutableSetOf<String>()
         val basedDirectory = File(directory)
 
         if (!subdirectory) {
@@ -38,6 +38,6 @@ class Find {
         }
         if (result.isEmpty()) throw IOException("В текущей директории файл(-ы) не найдены")
         else println(result)
-        return result.toSet()
+        return result
     }
 }
