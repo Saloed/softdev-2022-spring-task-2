@@ -2,21 +2,18 @@ package softdev.spring.task
 
 import org.apache.commons.io.FileUtils
 import java.io.File
-import java.io.FileNotFoundException
 import kotlin.math.pow
 
 class Du {
-    var sumSizeString: String? = null //для тестов
-    var size: Long = 0 //для тестов
-    fun du(h: Boolean, c: Boolean, si: Boolean, fileNames: String): Int {
-        val namesSplit = fileNames.trim().split("--")
+    lateinit var sumSizeString: String //для тестов
+    var sumSize: Long = 0 //для тестов
+    fun du(h: Boolean, c: Boolean, si: Boolean, namesSplit: List<String>): Int {
         val files = mutableMapOf<String, Long>()
         for (name in namesSplit) {
-            var fileSize: Long;
-            if (File(name).isFile) {
-                fileSize = File(name).length()
+            val fileSize: Long = if (File(name).isFile) {
+                File(name).length()
             } else if (File(name).isDirectory) {
-                fileSize = FileUtils.sizeOfDirectory(File(name))
+                FileUtils.sizeOfDirectory(File(name))
             } else return 1
             files[File(name).name] = fileSize
         }
@@ -24,11 +21,11 @@ class Du {
         val base = if (si) 1000.0 else 1024.0
 
         val namesOutputList = mutableListOf<String>()
-        var sumSize: Long = 0
+        //
         if (h) {
-            for (File in files) {
-                val size = File.value
-                val name = File.key
+            for (file in files) {
+                val size = file.value
+                val name = file.key
                 sumSize += size
                 when {
                     size < base -> namesOutputList += "$name size is $size B"
@@ -38,9 +35,9 @@ class Du {
                 }
             }
         } else {
-            for (File in files) {
-                sumSize += File.value
-                namesOutputList += "${File.key} size is ${File.value / base.toInt()}"
+            for (file in files) {
+                sumSize += file.value
+                namesOutputList += "${file.key} size is ${file.value / base.toInt()}"
             }
         }
         namesOutputList.forEach { println(it) }
@@ -60,7 +57,7 @@ class Du {
             }
             println(sumSizeString)
         }
-        size = sumSize
+        //
         return 0
     }
 }

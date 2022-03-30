@@ -45,7 +45,7 @@ dependencies {
 
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    manifest() {
+    manifest {
         attributes 'Main-Class': 'softdev.spring.task.DuLauncherKt'
     }
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }

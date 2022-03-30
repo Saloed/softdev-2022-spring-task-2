@@ -10,10 +10,9 @@ class DuTest {
         val c = true
         val h = false
         val si = true
-        duu.du(h, c, si, "testFiles/a--testFiles/AOT.jpg")
-        assertEquals(duu.du(h, c, si, "testFiles/a--testFiles/AOT.jpg"), 0)
+        duu.du(h, c, si, listOf("testFiles/a", "testFiles/AOT.jpg"))
         assertEquals("Total is 391", duu.sumSizeString)
-        assertEquals(duu.size, 391214)
+        assertEquals(duu.du(h, c, si, listOf("testFiles/a", "testFiles/AOT.jpg")), 0)
     }
 
     @Test
@@ -22,8 +21,10 @@ class DuTest {
         val c = true
         val h = true
         val si = false
-        assertEquals(1, duu.du(h, c, si, "testFiles/a--testsdfsdfsFiles/AOT.jpg"))
-        duu.du(h, c, si, "testFiles/a--testFiles/AOT.jpg")
+        val a = listOf("testFiles/a", "testFiles/AOT.jpg")
+        val b = listOf("testFiles/a", "testsdfsdfsFiles/AOT.jpg")
+        assertEquals(1, duu.du(h, c, si, b))
+        duu.du(h, c, si, a)
         assertEquals("Total is 382 KB", duu.sumSizeString)
     }
 
@@ -33,7 +34,7 @@ class DuTest {
         val c = false
         val h = false
         val si = false
-        duu.du(h, c, si, "testFiles")
-        assertEquals(duu.size, 11739802)
+        duu.du(h, c, si, listOf("testFiles"))
+        assertEquals(duu.sumSize, 11739802)
     }
 }
