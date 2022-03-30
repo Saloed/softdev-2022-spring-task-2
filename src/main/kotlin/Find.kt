@@ -36,8 +36,8 @@ class Find {
 
             }
         }
-        if (result.isEmpty()) throw IOException("В текущей директории файл(-ы) не найдены")
-        else println(result)
+//        if (result.isEmpty()) throw IOException("В текущей директории файл(-ы) не найдены")
+        println(result)
         return result
     }
 }
