@@ -6,7 +6,7 @@ import java.util.*
 
 
 class Find {
-    fun find(directory: String, subdirectory: Boolean, fileNames: List<String>): Set<String> {
+    fun find(directory: String, subdirectory: Boolean, fileNames: Set<String>): Set<String> {
 
         val result = mutableListOf<String>()
         val basedDirectory = File(directory)
