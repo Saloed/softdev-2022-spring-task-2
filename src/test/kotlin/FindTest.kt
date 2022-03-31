@@ -14,7 +14,7 @@ class FindTest {
     fun test2() {
         val find1 = Find()
         val list = setOf("3.txt", "7.txt")
-        assertEquals(find1.find("./input/folder", false, listOf("1.txt", "7.txt", "2.txt", "3.txt", "10.txt")), list)
+        assertEquals(find1.find("./input/folder", false, listOf("1.txt", "3.txt", "2.txt", "7.txt", "10.txt")), list)
     }
 
     @Test
