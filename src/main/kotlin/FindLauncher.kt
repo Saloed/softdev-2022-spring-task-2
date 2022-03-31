@@ -30,9 +30,6 @@ class FindLauncher {
         } catch (e: IOException) {
             System.err.println(e.message)
         }
-//        println(directory)
-//        println(subdirectory)
-//        println(fileName)
     }
 }
 

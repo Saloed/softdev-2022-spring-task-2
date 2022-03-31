@@ -1,6 +1,5 @@
 import java.io.File
 import java.io.IOException
-import java.lang.NullPointerException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
@@ -11,8 +10,8 @@ class Find {
 
         val result = mutableSetOf<String>()
         val basedDirectory = File(directory)
-
         val path1 = Path.of(directory)
+
         if (!Files.exists(path1)) throw IOException("Такой директории не существует")
 
         if (!subdirectory) {
@@ -24,7 +23,6 @@ class Find {
                 }
             }
         } else {
-
             val fileTree = PriorityQueue<File>()
             fileTree.addAll(basedDirectory.listFiles()!!)
 
@@ -37,10 +35,10 @@ class Find {
                         result.add(currentFile.name)
                     }
                 }
-
             }
+
         }
-        if (result.isEmpty()) throw NullPointerException("В текущей директории файл(-ы) не найдены")
+        if (result.isEmpty()) println("В текущей директории файл(-ы) не найдены")
         else println(result)
         return result
     }
