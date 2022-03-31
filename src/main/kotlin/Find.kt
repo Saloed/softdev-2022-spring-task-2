@@ -17,7 +17,7 @@ class Find {
 
         if (!subdirectory) {
             for (file in fileNames) {
-                val d1 = "$directory\\$file"
+                val d1 = "$directory/$file"
                 val path = Path.of(d1)
                 if (Files.exists(path)) {
                     result.add(file)
