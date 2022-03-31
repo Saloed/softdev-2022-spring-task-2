@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Ls {
+
     public static void main(String[] args) throws CmdLineException, IOException {
         LsArgs values = new LsArgs(args);
         File folder = new File(values.getDirectory());
