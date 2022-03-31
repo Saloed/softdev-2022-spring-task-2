@@ -1,5 +1,6 @@
 import java.io.File
 import java.io.IOException
+import java.lang.NullPointerException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
@@ -39,7 +40,7 @@ class Find {
 
             }
         }
-        if (result.isEmpty()) println("В текущей директории файл(-ы) не найдены")
+        if (result.isEmpty()) throw NullPointerException("В текущей директории файл(-ы) не найдены")
         else println(result)
         return result
     }
