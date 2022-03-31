@@ -12,7 +12,7 @@ class FindLauncher {
     private val subdirectory: Boolean = false
 
     @Argument(required = true, metaVar = "FileName", usage = "Input file name")
-    private val fileName: Set<String>? = null
+    private val fileName: List<String>? = null
 
     fun launch(args: Array<String>) {
         val parser = CmdLineParser(this)

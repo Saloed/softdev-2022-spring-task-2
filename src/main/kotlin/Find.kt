@@ -6,10 +6,13 @@ import java.util.*
 
 
 class Find {
-    fun find(directory: String, subdirectory: Boolean, fileNames: Set<String>): Set<String> {
+    fun find(directory: String, subdirectory: Boolean, fileNames: List<String>): Set<String> {
 
         val result = mutableSetOf<String>()
         val basedDirectory = File(directory)
+
+        val path1 = Path.of(directory)
+        if (!Files.exists(path1)) throw IOException("Такой директории не существует")
 
         if (!subdirectory) {
             for (file in fileNames) {
@@ -36,8 +39,8 @@ class Find {
 
             }
         }
-//        if (result.isEmpty()) throw IOException("В текущей директории файл(-ы) не найдены")
-        println(result)
+        if (result.isEmpty()) println("В текущей директории файл(-ы) не найдены")
+        else println(result)
         return result
     }
 }
