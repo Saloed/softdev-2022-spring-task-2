@@ -2,11 +2,14 @@ package softdev.spring.task
 
 import org.apache.commons.io.FileUtils
 import java.io.File
+import java.io.IOException
 import kotlin.math.pow
+import kotlin.jvm.Throws
 
 class Du {
     lateinit var sumSizeString: String //для тестов
     var sumSize: Long = 0 //для тестов
+    @Throws(IOException::class)
     fun du(h: Boolean, c: Boolean, si: Boolean, namesSplit: List<String>): Int {
         val files = mutableMapOf<String, Long>()
         for (name in namesSplit) {

@@ -4,7 +4,6 @@ import org.kohsuke.args4j.Argument
 import org.kohsuke.args4j.CmdLineException
 import org.kohsuke.args4j.CmdLineParser
 import org.kohsuke.args4j.Option
-import org.kohsuke.args4j.spi.StringArrayOptionHandler
 import java.io.IOException
 
 class DuLauncher {
