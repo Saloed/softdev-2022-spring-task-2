@@ -14,7 +14,7 @@ class LsLauncher {
     private val outputFile: String? = null
 
     @Argument(required = true, metaVar = "FileOrDir", usage = "Name of the file or directory")
-    private val fileOrDir: String? = null
+    private val fileOrDir: String = ""
 
     fun launch(args: Array<String>) {
         val parser = CmdLineParser(this)

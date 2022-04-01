@@ -25,50 +25,48 @@ Command Line: ls [-l] [-h] [-r] [-o output.file] directory_or_file
 Actually will be: java -jar ls.jar [-l] [-h] [-r] [-o output.file] directory_or_file
  */
 
-class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFlag: Boolean, private val outputFile: String?, private val fileOrDir: String?) {
+class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFlag: Boolean, private val outputFile: String?, private val fileOrDir: String) {
 
     private fun xxx(file: File?): String {
         val xxx = mutableListOf("0", "0", "0")
         if (file!!.canRead()) xxx[0] = "1"
         if (file.canWrite()) xxx[1] = "1"
         if (file.canExecute()) xxx[2] = "1"
-        return (xxx.joinToString())
+        return (xxx.joinToString(""))
     }
 
     private fun rwx(file: File?): String {
         val rwx = mutableListOf<String>()
-        if (file!!.canRead()) rwx.add("r")
-        if (file.canWrite()) rwx.add("w")
-        if (file.canExecute()) rwx.add("x")
-        return rwx.joinToString()
+        if (file!!.canRead()) rwx.add("r") else rwx.add("-")
+        if (file.canWrite()) rwx.add("w") else rwx.add("-")
+        if (file.canExecute()) rwx.add("x") else rwx.add("-")
+        return rwx.joinToString("")
     }
 
     private fun toHumanReadableSize(file: File?): String {
         return when (file!!.length()) {
-            in (0..1024) -> listOf(file.length().toString(), "B").joinToString(" ")
-            in (1024..1024.0.pow(2).toInt()) -> listOf((file.length() / 1024).toString(), "KB").joinToString(" ")
-            in (1024..1024.0.pow(3).toInt()) -> listOf((file.length() / 1024.0.pow(2).toInt()).toString(), "MB").joinToString(" ")
-            in (1024..1024.0.pow(4).toInt()) -> listOf((file.length() / 1024.0.pow(3).toInt()).toString(), "GB").joinToString(" ")
-            in (1024..1024.0.pow(5).toInt()) -> listOf((file.length() / 1024.0.pow(4).toInt()).toString(), "TB").joinToString(" ")
-            in (1024..1024.0.pow(6).toInt()) -> listOf((file.length() / 1024.0.pow(6).toInt()).toString(), "PB").joinToString(" ")
-            else -> "The size of file is bigger then 1024 PB"
+            in (0..1024) -> file.length().toString() + "B"
+            in (1024..1024.0.pow(2).toInt()) ->(file.length() / 1024).toString() + "KB"
+            in (1024..1024.0.pow(3).toInt()) ->(file.length() / 1024.0.pow(2).toInt()).toString() + "MB"
+            in (1024..1024.0.pow(4).toInt()) ->(file.length() / 1024.0.pow(3).toInt()).toString() + "GB"
+            else -> "The size of file is bigger then 1024 GB"
         }
     }
 
     private fun toFile(file: File?): String {
         val nameOfFile = file!!.name
-        var (rwxOrXxx, lastModify, size) = listOf("", "", "")
+        var (rwx, xxx, lastModify, size) = listOf("", "", "", "")
         if (lFlag) {
             lastModify = SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(Date(file.lastModified()))
             size = file.length().toString()
-            rwxOrXxx = xxx(file)
+            xxx = xxx(file)
         }
         if (hFlag) {
             size = toHumanReadableSize(file)
-            rwxOrXxx = rwx(file)
+            rwx = rwx(file)
         }
-        return if (rFlag) listOf(rwxOrXxx, size, lastModify, nameOfFile).joinToString(" ")
-        else listOf(nameOfFile, lastModify, size, rwxOrXxx).joinToString(" ")
+        return if (rFlag) listOf(xxx, rwx, size, lastModify, nameOfFile).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
+        else listOf(nameOfFile, size, lastModify, rwx, xxx).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
     }
 
     private fun toFileList(file: File): ArrayList<File?> {
@@ -89,7 +87,7 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
         return sortedList
     }
 
-    val finalList: ArrayList<String> = toDir(toFileList(File(fileOrDir!!)))
+    val finalList: ArrayList<String> = toDir(toFileList(File(fileOrDir)))
 
     @Throws(IOException::class)
     fun writeToFile(fileList: ArrayList<String>) {
@@ -97,19 +95,5 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
                 for (file in fileList) it.write(file)
             println("Information is recorded in $outputFile")
         }
-    }
-
-    @Override
-    override fun equals(other: Any?): Boolean = super.equals(other)
-
-    @Override
-    override fun hashCode(): Int {
-        var result = lFlag.hashCode()
-        result = 31 * result + hFlag.hashCode()
-        result = 31 * result + rFlag.hashCode()
-        result = 31 * result + (outputFile?.hashCode() ?: 0)
-        result = 31 * result + (fileOrDir?.hashCode() ?: 0)
-        result = 31 * result + finalList.hashCode()
-        return result
     }
 }
