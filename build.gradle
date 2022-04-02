@@ -1,0 +1,14 @@
+apply plugin: "java"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation('org.junit.jupiter:junit-jupiter:5.8.2')
+    implementation('commons-io:commons-io:20030203.000550')
+    implementation "org.kohsuke.args4j:args4j-maven-plugin:2.33"
+}
+test {
+    useJUnitPlatform()
+}
