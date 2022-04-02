@@ -22,8 +22,6 @@ class DuTest {
         val h = true
         val si = false
         val a = listOf("testFiles/a", "testFiles/AOT.jpg")
-        val b = listOf("testFiles/a", "testsdfsdfsFiles/AOT.jpg")
-        assertEquals(1, duu.du(h, c, si, b))
         duu.du(h, c, si, a)
         assertEquals("Total is 382 KB", duu.sumSizeString)
     }
@@ -36,5 +34,16 @@ class DuTest {
         val si = false
         duu.du(h, c, si, listOf("testFiles"))
         assertEquals(duu.sumSize, 11739802)
+    }
+
+    @Test
+    fun fourthTest() {
+        val duu = Du()
+        val c = true
+        val h = true
+        val si = false
+        val a = listOf("testFiles/a", "testFiles/AOT.jpg")
+        val b = listOf("testFiles/a", "testsdfsdfsFiles/AOT.jpg")
+        assertEquals(1, duu.du(h, c, si, b))
     }
 }
