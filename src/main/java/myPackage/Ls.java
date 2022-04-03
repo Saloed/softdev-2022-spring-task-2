@@ -9,44 +9,51 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 public class Ls {
 
-    public static void main(String[] args) throws CmdLineException, IOException {
-        LsArgs values = new LsArgs(args);
-        File folder = new File(values.getDirectory());
-        File[] list;
+    public static void main(String[] args) throws IOException {
+        try {
+            LsArgs values = new LsArgs(args);
+            File folder = new File(values.getDirectory());
+            File[] list;
 
-        if (folder.isFile()) {
-            list = new File[]{folder};
-        } else {
-            list = folder.listFiles();
-        }
-
-        if (values.isReversed()) {
-            List<File> reversed = Arrays.asList(list);
-            Collections.reverse(reversed);
-            list = reversed.toArray(list);
-        }
-        String result = "";
-        if (!values.isLong()) {
-            result = getNames(list);
-        } else {
-            if (!values.isHumanReadble()) {
-                result = getLongInfo(list);
+            if (folder.isFile()) {
+                list = new File[]{folder};
             } else {
-                result = getHumanReadableInfo(list);
+                list = folder.listFiles();
             }
-        }
 
-        File output = values.getOutputFile();
-        if (output != null) {
-            FileWriter writer = new FileWriter(output);
-            writer.write(result);
-            writer.close();
-        } else {
-            System.out.print(result);
+            if (values.isReversed()) {
+                List<File> reversed = Arrays.asList(list);
+                Collections.reverse(reversed);
+                list = reversed.toArray(list);
+            }
+            String result = "";
+            if (!values.isLong()) {
+                result = getNames(list);
+            } else {
+                if (!values.isHumanReadble()) {
+                    result = getLongInfo(list);
+                } else {
+                    result = getHumanReadableInfo(list);
+                }
+            }
+
+            File output = values.getOutputFile();
+            if (output != null) {
+                try (FileWriter writer = new FileWriter(output)) {
+                    writer.write(result);
+                }
+            } else {
+                System.out.print(result);
+            }
+        } catch (CmdLineException e) {
+            System.err.println("Incorrect args");
         }
     }
 
@@ -115,11 +122,11 @@ public class Ls {
     }
 
     private static String sizeForHuman(long size) {
-        String[] namesList = new String[] {"б", "Кб", "Мб", "Гб", "Тб"};
+        String[] namesList = new String[]{"б", "Кб", "Мб", "Гб", "Тб"};
         long multiplier = 1024;
         int index = 0;
         long currentSize = size;
-        while (currentSize/multiplier > 0) {
+        while (currentSize / multiplier > 0) {
             index++;
             currentSize = currentSize / multiplier;
         }
