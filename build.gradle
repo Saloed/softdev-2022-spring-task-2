@@ -11,7 +11,7 @@ repositories {
 
 jar {
     manifest {//обозначаем главный класс в jar
-        attributes "Main-Class": "myPackage.Ls"
+        attributes "Main-Class": "mypackage.Ls"
     }
 
     from {//загружаем библиотечные файлы в jar

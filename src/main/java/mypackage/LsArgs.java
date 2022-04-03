@@ -1,4 +1,4 @@
-package myPackage;
+package mypackage;
 
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
@@ -12,7 +12,7 @@ public class LsArgs {
     @Option(name = "-l", metaVar = "long")
     private boolean isLong;
     @Option(name = "-h", metaVar = "human-readable")
-    private boolean isHumanReadble;
+    private boolean isHumanReadable;
     @Option(name = "-r", metaVar = "reverse")
     private boolean isReversed;
     @Option(name = "-o", metaVar = "output")
@@ -29,8 +29,8 @@ public class LsArgs {
         return isLong;
     }
 
-    public boolean isHumanReadble() {
-        return isHumanReadble;
+    public boolean isHumanReadable() {
+        return isHumanReadable;
     }
 
     public boolean isReversed() {
@@ -38,9 +38,9 @@ public class LsArgs {
     }
 
     public File getOutputFile() throws IOException {
-        if (outputFile == null) {
+        if (outputFile == null)
             return null;
-        }
+
         outputFile.createNewFile();
         return outputFile;
     }

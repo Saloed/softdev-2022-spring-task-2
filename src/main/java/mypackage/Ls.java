@@ -1,4 +1,4 @@
-package myPackage;
+package mypackage;
 
 import org.kohsuke.args4j.CmdLineException;
 
@@ -37,7 +37,7 @@ public class Ls {
             if (!values.isLong()) {
                 result = getNames(list);
             } else {
-                if (!values.isHumanReadble()) {
+                if (!values.isHumanReadable()) {
                     result = getLongInfo(list);
                 } else {
                     result = getHumanReadableInfo(list);
@@ -59,9 +59,9 @@ public class Ls {
 
     private static String getNames(File[] list) {
         StringBuilder sb = new StringBuilder();
-        for (File file : list) {
+        for (File file : list)
             sb.append(file.getName() + System.lineSeparator());
-        }
+
         return sb.toString();
     }
 
@@ -112,7 +112,6 @@ public class Ls {
         }
         return sb.toString();
     }
-
 
     private static String timeForHuman(FileTime time) {
         Date date = new Date(time.toMillis());
