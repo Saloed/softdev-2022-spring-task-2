@@ -42,7 +42,6 @@ class DuTest {
         val c = true
         val h = true
         val si = false
-        val a = listOf("testFiles/a", "testFiles/AOT.jpg")
         val b = listOf("testFiles/a", "testsdfsdfsFiles/AOT.jpg")
         assertEquals(1, duu.du(h, c, si, b))
     }
