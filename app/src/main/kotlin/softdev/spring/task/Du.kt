@@ -7,7 +7,7 @@ import kotlin.math.pow
 import kotlin.jvm.Throws
 
 class Du {
-    lateinit var sumSizeString: String //для тестов
+    lateinit var sumSizeString: String
     var sumSize: Long = 0
 
     @Throws(IOException::class)
