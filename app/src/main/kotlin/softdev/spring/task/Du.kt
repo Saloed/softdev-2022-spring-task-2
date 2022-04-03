@@ -29,6 +29,7 @@ class Du {
 
         val namesOutputList = mutableListOf<String>()
         if (h) {
+            files["Total"] = sumSize
             for (file in files) {
                 val size = file.value
                 val name = file.key
@@ -36,9 +37,11 @@ class Du {
                     size < base -> namesOutputList += "$name size is $size B"
                     base <= size && size < base * base -> namesOutputList += "$name size is ${size / baseInt} KB"
                     base * base <= size && size < base.pow(3) -> namesOutputList += "$name size is ${size / (baseInt * baseInt)} MB"
-                    base.pow(3) <= size -> namesOutputList += "$name size is ${size.toDouble() / base.pow(3)} GB"
+                    base.pow(3) <= size -> namesOutputList += "$name size is ${size.toDouble() / base.pow(3).toInt()} GB"
                 }
             }
+            sumSizeString = namesOutputList.last()
+            namesOutputList.removeLast()
         } else {
             for (file in files) {
                 namesOutputList += "${file.key} size is ${file.value / baseInt}"
@@ -47,17 +50,7 @@ class Du {
         namesOutputList.forEach { println(it) }
 
         if (c) {
-            if (h) {
-                when {
-                    sumSize < base -> sumSizeString = "Total is $sumSize B"
-                    base <= sumSize && sumSize < base * base -> sumSizeString = "Total is ${sumSize / baseInt} KB"
-                    base * base <= sumSize && sumSize < base.pow(3) -> sumSizeString =
-                        "Total is ${sumSize / baseInt * baseInt} MB"
-                    base.pow(3) <= sumSize -> sumSizeString = "Total is ${sumSize.toDouble() / base.pow(3).toInt()} GB"
-                }
-            } else {
-                sumSizeString = "Total is ${sumSize / baseInt}"
-            }
+            if (!h) sumSizeString = "Total size is ${sumSize / baseInt}"
             println(sumSizeString)
         }
         return 0
