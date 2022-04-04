@@ -27,24 +27,24 @@ Actually will be: java -jar ls.jar [-l] [-h] [-r] [-o output.file] directory_or_
 
 class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFlag: Boolean, private val outputFile: String?, private val fileOrDir: String) {
 
-    private fun xxx(file: File?): String {
+    private fun xxx(file: File): String {
         val xxx = mutableListOf("0", "0", "0")
-        if (file!!.canRead()) xxx[0] = "1"
+        if (file.canRead()) xxx[0] = "1"
         if (file.canWrite()) xxx[1] = "1"
         if (file.canExecute()) xxx[2] = "1"
         return (xxx.joinToString(""))
     }
 
-    private fun rwx(file: File?): String {
+    private fun rwx(file: File): String {
         val rwx = mutableListOf<String>()
-        if (file!!.canRead()) rwx.add("r") else rwx.add("-")
+        if (file.canRead()) rwx.add("r") else rwx.add("-")
         if (file.canWrite()) rwx.add("w") else rwx.add("-")
         if (file.canExecute()) rwx.add("x") else rwx.add("-")
         return rwx.joinToString("")
     }
 
-    private fun toHumanReadableSize(file: File?): String {
-        return when (file!!.length()) {
+    private fun toHumanReadableSize(file: File): String {
+        return when (file.length()) {
             in (0..1024) -> file.length().toString() + "B"
             in (1024..1024.0.pow(2).toInt()) -> (file.length() / 1024).toString() + "KB"
             in (1024..1024.0.pow(3).toInt()) -> (file.length() / 1024.0.pow(2).toInt()).toString() + "MB"
@@ -53,8 +53,8 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
         }
     }
 
-    private fun toFile(file: File?): String {
-        val nameOfFile = file!!.name
+    private fun toFile(file: File): String {
+        val nameOfFile = file.name
         var (rwx, xxx, lastModify, size) = listOf("", "", "", "")
         if (lFlag) {
             lastModify = SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(Date(file.lastModified()))
@@ -70,8 +70,8 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
         else listOf(rwx, xxx, size, lastModify, nameOfFile).joinToString(extraSpace).replace(Regex("""[$extraSpace]+"""), extraSpace).trim()
     }
 
-    private fun toFileList(file: File): ArrayList<File?> {
-        val fileList = ArrayList<File?>()
+    private fun toFileList(file: File): ArrayList<File> {
+        val fileList = ArrayList<File>()
         if (file.isDirectory) {
             if (file.listFiles() != null)
                 file.listFiles()!!.forEach { fileList.add(it) }
@@ -79,7 +79,7 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
         return fileList
     }
 
-    private fun toDir(fileList: ArrayList<File?>): ArrayList<String> {
+    private fun toDir(fileList: ArrayList<File>): ArrayList<String> {
         val sortedList = ArrayList<String>()
         val actualList = if (rFlag) {
             fileList.asReversed()
