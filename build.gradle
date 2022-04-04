@@ -1,0 +1,23 @@
+apply plugin: "java"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation('org.junit.jupiter:junit-jupiter:5.8.2')
+    implementation "org.kohsuke.args4j:args4j-maven-plugin:2.33"
+}
+test {
+    useJUnitPlatform()
+}
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes "Main-Class": "package1.Du"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
