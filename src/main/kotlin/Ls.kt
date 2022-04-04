@@ -65,15 +65,15 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
             size = toHumanReadableSize(file)
             rwx = rwx(file)
         }
-        return if (rFlag) listOf(xxx, rwx, size, lastModify, nameOfFile).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
-        else listOf(nameOfFile, size, lastModify, rwx, xxx).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
+        return if (rFlag) listOf(nameOfFile, size, lastModify, xxx, rwx).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
+        else listOf(rwx, xxx, size, lastModify, nameOfFile).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
     }
 
     private fun toFileList(file: File): ArrayList<File?> {
         val fileList = ArrayList<File?>()
         if (file.isDirectory) {
             if (file.listFiles() != null)
-                file.listFiles()!!.forEach { if (it != null) fileList.add(it) }
+                file.listFiles()!!.forEach { fileList.add(it) }
         } else fileList.add(file)
         return fileList
     }
@@ -83,17 +83,12 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
         val actualList = if (rFlag) {
             fileList.asReversed()
         } else fileList
-        actualList.forEach { if (it != null) sortedList.add(toFile(it)) }
+        actualList.forEach { sortedList.add(toFile(it)) }
         return sortedList
     }
 
     val finalList: ArrayList<String> = toDir(toFileList(File(fileOrDir)))
 
     @Throws(IOException::class)
-    fun writeToFile(fileList: ArrayList<String>) {
-            File(outputFile!!).bufferedWriter().use {
-                for (file in fileList) it.write(file)
-            println("Information is recorded in $outputFile")
-        }
-    }
+    fun output(stream: OutputStream) = stream.bufferedWriter().use { for (file in finalList) it.write(file) }
 }
