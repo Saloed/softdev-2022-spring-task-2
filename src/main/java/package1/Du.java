@@ -29,14 +29,16 @@ public class Du {
                 superSize += entry.getValue();
             }
             float allSize = superSize;
-            int i = 0;
             if (arguments.isH()) {
+                int i = 0;
                 while (i < 3 && base <= allSize) {
                     allSize /= base;
                     i++;
                 }
+                System.out.print(String.format("%.2f", allSize) + " " + dimension[i]);
+            }else{
+                System.out.printf("%.2f", allSize);
             }
-            System.out.print(String.format("%.2f", allSize) + " " + dimension[i]);
             return;
         }
         if (arguments.isH()) {

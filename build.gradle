@@ -14,7 +14,7 @@ test {
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
-        attributes "Main-Class": "code.Tar"
+        attributes "Main-Class": "package1.Du"
     }
 
     from {
