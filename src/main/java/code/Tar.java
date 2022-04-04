@@ -14,9 +14,8 @@ public class Tar {
         if (arguments.getUnmerge()!=null && (arguments.getOutput() != null)
                 || arguments.getUnmerge()==null && arguments.getOutput() == null)
             throw new IllegalArgumentException("only one flag please");
-        String[] input = Arrays.copyOfRange(arguments.getInput(), 0, arguments.getInput().length);
         if (arguments.getUnmerge() != null) uVariant(arguments.getUnmerge());
-        else outVariant(input, arguments.getOutput());
+        else outVariant(Arrays.copyOfRange(arguments.getInput(), 0, arguments.getInput().length), arguments.getOutput());
     }
 
     private static void uVariant(String name){
