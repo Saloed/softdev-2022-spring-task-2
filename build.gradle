@@ -11,9 +11,8 @@ jar {
         attributes 'Main-Class': 'LsLauncherKt'
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from {
-        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    archiveName("ls.jar")
 }
 
 dependencies {

@@ -1,8 +1,8 @@
-import java.io.*
+import java.io.File
+import java.io.IOException
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.jvm.Throws
 import kotlin.math.pow
 
 /**
@@ -46,9 +46,9 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
     private fun toHumanReadableSize(file: File?): String {
         return when (file!!.length()) {
             in (0..1024) -> file.length().toString() + "B"
-            in (1024..1024.0.pow(2).toInt()) ->(file.length() / 1024).toString() + "KB"
-            in (1024..1024.0.pow(3).toInt()) ->(file.length() / 1024.0.pow(2).toInt()).toString() + "MB"
-            in (1024..1024.0.pow(4).toInt()) ->(file.length() / 1024.0.pow(3).toInt()).toString() + "GB"
+            in (1024..1024.0.pow(2).toInt()) -> (file.length() / 1024).toString() + "KB"
+            in (1024..1024.0.pow(3).toInt()) -> (file.length() / 1024.0.pow(2).toInt()).toString() + "MB"
+            in (1024..1024.0.pow(4).toInt()) -> (file.length() / 1024.0.pow(3).toInt()).toString() + "GB"
             else -> "The size of file is bigger then 1024 GB"
         }
     }
@@ -65,8 +65,9 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
             size = toHumanReadableSize(file)
             rwx = rwx(file)
         }
-        return if (rFlag) listOf(nameOfFile, size, lastModify, xxx, rwx).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
-        else listOf(rwx, xxx, size, lastModify, nameOfFile).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
+        val extraSpace = "           "
+        return if (rFlag) listOf(nameOfFile, size, lastModify, xxx, rwx).joinToString(extraSpace).replace(Regex("""[$extraSpace]+"""), extraSpace).trim()
+        else listOf(rwx, xxx, size, lastModify, nameOfFile).joinToString(extraSpace).replace(Regex("""[$extraSpace]+"""), extraSpace).trim()
     }
 
     private fun toFileList(file: File): ArrayList<File?> {
