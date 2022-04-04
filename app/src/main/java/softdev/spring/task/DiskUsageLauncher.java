@@ -35,12 +35,13 @@ public class DiskUsageLauncher {
             System.err.println(e.getMessage());
             System.err.println("java -jar DiskUsage.jar -h -c --si File1 File2 File3...");
             parser.printUsage(System.err);
+            System.exit(1);
             return;
         }
 
         DiskUsage dU = new DiskUsage();
         try {
-            System.out.println(dU.reply(h, c, si, listFiles));
+            dU.reply(h, c, si, listFiles);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

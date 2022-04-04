@@ -22,7 +22,7 @@ public class DiskUsage {
 
         for (String fileName: Files) {
             File file = new File(fileName);
-            long size = 0;
+            long size;
             if (file.isFile()) {
                 size = file.length();
             }
@@ -40,22 +40,20 @@ public class DiskUsage {
         if (h && !c) {
             for (Map.Entry<String, Long> fileName: mapFiles.entrySet()) {
                 float size = fileName.getValue();
-                //totalSize += size;
                 int i = 0;
                 while (i < 3 && base <= size) {
                     size /= base;
                     i++;
                 }
-                fileName.setValue((long) size);
-                fileInfo.add("%s %s %s".formatted(fileName.getKey(), String.format("%.2f", size), dimension[i]));
+                fileInfo.add(fileName.getKey() + " " + String.format("%.2f", size) + " " + dimension[i]);
+                System.out.println(fileInfo);
             }
         } else if (!h && !c) {
             for (Map.Entry<String, Long> fileName: mapFiles.entrySet()) {
-                //totalSize += fileName.getValue();
                 float size = fileName.getValue();
                 float division = size / base;
-                fileName.setValue((long) size);
-                fileInfo.add("%s %s".formatted(fileName.getKey(), String.format("%.2f", division)));
+                fileInfo.add(fileName.getKey() + " " + String.format("%.2f", division));
+                System.out.println(fileInfo);
             }
         }
 
@@ -66,7 +64,7 @@ public class DiskUsage {
                     totalSize /= base;
                     i++;
                 }
-                totalSizeString = "%s %s".formatted(String.format("%.2f", totalSize), dimension[i]);
+                totalSizeString = String.format("%.2f", totalSize) + " " + dimension[i];
             } else {
                 totalSizeString = String.format("%.2f", (totalSize / base));
             }
