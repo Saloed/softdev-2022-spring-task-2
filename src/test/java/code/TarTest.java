@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TarTest {
     @Test
-    public void uTest() throws IOException {
+    public void uTest() throws IOException, CmdLineException {
         Tar.main("-u files\\uVariant\\uTest.txt".split(" "));
         File file1 = new File("files\\uVariant\\1.txt");
         File exp1 = new File("files\\uVariant\\expect1.txt");
@@ -25,7 +25,7 @@ public class TarTest {
     }
 
     @Test
-    public void outTest() throws IOException {
+    public void outTest() throws IOException, CmdLineException {
         Tar.main("files\\outVariant\\1.txt files\\outVariant\\2.txt -out files\\outVariant\\3.txt".split(" "));
         File act = new File("files\\outVariant\\3.txt");
         File exp = new File("files\\outVariant\\expect.txt");

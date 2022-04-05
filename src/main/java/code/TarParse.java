@@ -13,24 +13,30 @@ public class TarParse {
     @Option(name = "-u", metaVar = "unmerge")
     private String unmerge;
 
-    public TarParse(String[] args){
+    public TarParse(String[] args) throws CmdLineException {
         CmdLineParser parser = new CmdLineParser(this);
-        try{
+        try {
             parser.parseArgument(args);
-        } catch (CmdLineException e){
+            if (input != null && (unmerge != null || output == null))
+                throw new IllegalArgumentException("only one flag please");
+            if (input == null && (unmerge == null || output != null))
+                throw new IllegalArgumentException("only one flag please");
+        } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
+            throw e;
         }
     }
-    public String[] getInput(){
+
+    public String[] getInput() {
         return input;
     }
 
-    public String getOutput(){
+    public String getOutput() {
         return output;
     }
 
-    public String getUnmerge(){
+    public String getUnmerge() {
         return unmerge;
     }
 }
