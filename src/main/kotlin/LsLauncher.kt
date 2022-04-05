@@ -1,5 +1,6 @@
 import org.kohsuke.args4j.*
 import java.io.File
+import java.io.OutputStream
 
 class LsLauncher {
     @Option(name = "-l", aliases = ["--long"], metaVar = "LongFlag", usage = "Additional information")
@@ -29,8 +30,8 @@ class LsLauncher {
         }
         try {
             val ls = Ls(lFlag, hFlag, rFlag, outputFile, fileOrDir)
-            val outputStream = outputFile?.let { File(it) }?.outputStream() ?: System.out
-            ls.output(outputStream)
+            if (outputFile?.let { File(it) }?.outputStream() == null) ls.finalList.forEach{ println(it) }
+            else ls.fileOutput(File(outputFile).outputStream())
         } catch (e: Exception) {
             System.err.println(e.message)
         }

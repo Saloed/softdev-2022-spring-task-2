@@ -1,3 +1,4 @@
+import org.kohsuke.args4j.CmdLineException
 import java.io.File
 import java.io.IOException
 import java.io.OutputStream
@@ -11,15 +12,9 @@ import kotlin.math.pow
  *
  *
 Флаг -l (long) переключает вывод в длинный формат, в котором, кроме имени файла, указываются права на выполнение/чтение/запись в виде битовой маски XXX, время последней модификации и размер в байтах.
-
 Флаг -h (human-readable) переключает вывод в человеко-читаемый формат (размер в кило-, мега- или гигабайтах, права на выполнение в виде rwx).
-
 Флаг -r (reverse) меняет порядок вывода на противоположный.
-
 Флаг -o (output) указывает имя файла, в который следует вывести результат; если этот флаг отсутствует, результат выводится в консоль.
-
-
-
 В случае, если в качестве аргумента указан файл, а не директория, следует вывести информацию об этом файле.
 Command Line: ls [-l] [-h] [-r] [-o output.file] directory_or_file
 Actually will be: java -jar ls.jar [-l] [-h] [-r] [-o output.file] directory_or_file
@@ -36,10 +31,10 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
     }
 
     private fun rwx(file: File): String {
-        val rwx = mutableListOf<String>()
-        if (file.canRead()) rwx.add("r") else rwx.add("-")
-        if (file.canWrite()) rwx.add("w") else rwx.add("-")
-        if (file.canExecute()) rwx.add("x") else rwx.add("-")
+        val rwx = mutableListOf("-", "-", "-")
+        if (file.canRead()) rwx[0] = "r"
+        if (file.canWrite()) rwx[1] = "w"
+        if (file.canExecute()) rwx[2] = "x"
         return rwx.joinToString("")
     }
 
@@ -90,5 +85,10 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
     val finalList: ArrayList<String> = toDir(toFileList(File(fileOrDir)))
 
     @Throws(IOException::class)
-    fun output(stream: OutputStream) = stream.bufferedWriter().use { for (file in finalList) it.write(file) }
+    fun fileOutput(stream: OutputStream) = stream.bufferedWriter().use {
+        for (file in finalList) {
+            it.write(file)
+            it.newLine()
+        }
+    }
 }
