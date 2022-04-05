@@ -63,14 +63,14 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
     }
 
     private fun toFileList(file: File): MutableList<File> {
-        val fileList = ArrayList<File>()
+        val fileList = mutableListOf<File>()
         if (file.isDirectory) file.listFiles()?.forEach { fileList.add(it) }
         else fileList.add(file)
         return fileList.sorted() as MutableList<File>
     }
 
     private fun toDir(fileList: MutableList<File>): MutableList<String> {
-        val sortedList = ArrayList<String>()
+        val sortedList = mutableListOf<String>()
         val actualList = if (rFlag) {
             fileList.asReversed()
         } else fileList

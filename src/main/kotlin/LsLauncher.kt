@@ -1,6 +1,5 @@
 import org.kohsuke.args4j.*
 import java.io.File
-import java.io.OutputStream
 
 class LsLauncher {
     @Option(name = "-l", aliases = ["--long"], metaVar = "LongFlag", usage = "Additional information")
