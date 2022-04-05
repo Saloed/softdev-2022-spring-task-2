@@ -30,7 +30,9 @@ public class PackerTest {
         Packer packer = new Packer();
         String inputFileName = "files/testPacking.txt";
         String outputFileName = "files/temp.txt";
-        packer.pack(new FileReader(inputFileName), new FileWriter(outputFileName));
+        try(FileReader fr = new FileReader(inputFileName); FileWriter fw = new FileWriter(outputFileName)) {
+            packer.pack(fr, fw);
+        }
         assertFileContext("files/temp.txt", "ABC3D10F");
     }
 
@@ -39,7 +41,9 @@ public class PackerTest {
         Packer packer = new Packer();
         String inputFileName = "files/testUnpacking.txt";
         String outputFileName = "files/temp.txt";
-        packer.unPack(new FileReader(inputFileName), new FileWriter(outputFileName));
+        try(FileReader fr = new FileReader(inputFileName); FileWriter fw = new FileWriter(outputFileName)) {
+            packer.unPack(fr, fw);
+        }
         assertFileContext("files/temp.txt", "ABCDDDFFFFFFFFFF");
     }
 

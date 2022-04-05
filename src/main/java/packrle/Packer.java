@@ -17,7 +17,7 @@ public class Packer {
                 //если символ представлен в единственном экземпляре, цифру 1 перед ним не ставим
                 if(k != 1) writer.write(Integer.toString(k));
                 //тире показывает, что следующий символ либо цифр, либо тире
-                if(Character.isDigit(c)||c == 45) writer.write("-");
+                if(Character.isDigit(c)||c == '-') writer.write("-");
                 writer.write(c);
                 k = 1;
                 c = next;
@@ -35,8 +35,7 @@ public class Packer {
                 reps = reps * 10 + Integer.parseInt(Character.toString(c));
                 c = reader.read();
             }
-            //если c это тире
-            if(c == 45) c = reader.read();
+            if(c == '-') c = reader.read();
             if(reps == 0) reps = 1;
             writer.write(Character.toString(c).repeat(reps));
             c = reader.read();

@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
 
-public class packrle {
+public class PackRLE {
         @Option(name = "-out")
         private String outputFileName;
         @Option(name = "-z", forbids = {"-u"})
@@ -18,7 +18,7 @@ public class packrle {
         private String inputFileNameToUnpack;
 
         public static void main(String[] args) {
-                new packrle().launch(args);
+                new PackRLE().launch(args);
         }
 
         private void launch(String[] args) {
@@ -28,18 +28,22 @@ public class packrle {
                 } catch (CmdLineException e) {
                         System.err.println(e.getMessage());
                         parser.printUsage(System.err);
+                        return;
                 }
 
                 try {
                         if (inputFileNameToPack != null)
-                                new Packer().pack(new FileReader(inputFileNameToPack), new FileWriter(
-                                        Objects.requireNonNullElse(outputFileName, inputFileNameToPack + ".rle")));
+                                try (FileReader fr = new FileReader(inputFileNameToPack); FileWriter fw = new FileWriter(
+                                        Objects.requireNonNullElse(outputFileName, inputFileNameToPack + ".rle"))) {
+                                        new Packer().pack(fr, fw);
+                                }
                         else if (inputFileNameToUnpack != null)
-                                new Packer().unPack(new FileReader(inputFileNameToUnpack), new FileWriter(
-                                        Objects.requireNonNullElse(outputFileName, inputFileNameToUnpack + ".rle")));
-                        else {
-                                parser.printUsage(System.err);
-                        }
+                                try (FileReader fr = new FileReader(inputFileNameToUnpack); FileWriter fw = new FileWriter(
+                                        Objects.requireNonNullElse(outputFileName, inputFileNameToUnpack + ".rle"))) {
+                                        new Packer().unPack(fr, fw);
+                                }
+                        else parser.printUsage(System.err);
+
                 } catch (IOException e) {
                         e.printStackTrace();
                 }
