@@ -1,4 +1,3 @@
-import org.kohsuke.args4j.CmdLineException
 import java.io.File
 import java.io.IOException
 import java.io.OutputStream
@@ -60,20 +59,17 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
             size = toHumanReadableSize(file)
             rwx = rwx(file)
         }
-        return if (rFlag) listOf(nameOfFile, lastModify, size, xxx, rwx).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
-        else listOf(rwx, xxx, size, lastModify, nameOfFile).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
+        return listOf(rwx, xxx, size, lastModify, nameOfFile).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
     }
 
-    private fun toFileList(file: File): ArrayList<File> {
+    private fun toFileList(file: File): MutableList<File> {
         val fileList = ArrayList<File>()
-        if (file.isDirectory) {
-            if (file.listFiles() != null)
-                file.listFiles()!!.forEach { fileList.add(it) }
-        } else fileList.add(file)
-        return fileList
+        if (file.isDirectory) file.listFiles()?.forEach { fileList.add(it) }
+        else fileList.add(file)
+        return fileList.sorted() as MutableList<File>
     }
 
-    private fun toDir(fileList: ArrayList<File>): ArrayList<String> {
+    private fun toDir(fileList: MutableList<File>): MutableList<String> {
         val sortedList = ArrayList<String>()
         val actualList = if (rFlag) {
             fileList.asReversed()
@@ -82,7 +78,7 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
         return sortedList
     }
 
-    val finalList: ArrayList<String> = toDir(toFileList(File(fileOrDir)))
+    val finalList = toDir(toFileList(File(fileOrDir)))
 
     @Throws(IOException::class)
     fun fileOutput(stream: OutputStream) = stream.bufferedWriter().use {

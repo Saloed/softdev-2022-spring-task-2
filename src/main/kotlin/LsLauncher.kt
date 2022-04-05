@@ -30,8 +30,12 @@ class LsLauncher {
         }
         try {
             val ls = Ls(lFlag, hFlag, rFlag, outputFile, fileOrDir)
-            if (outputFile?.let { File(it) }?.outputStream() == null) ls.finalList.forEach{ println(it) }
-            else ls.fileOutput(File(outputFile).outputStream())
+            val output = outputFile?.let { File(it) }?.outputStream()
+            if (output == null) ls.finalList.forEach{ println(it) }
+            else {
+                ls.fileOutput(output)
+                println("result is recorded in $outputFile")
+            }
         } catch (e: Exception) {
             System.err.println(e.message)
         }
