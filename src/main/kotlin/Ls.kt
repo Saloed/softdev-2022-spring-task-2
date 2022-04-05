@@ -65,9 +65,8 @@ class Ls(private val lFlag: Boolean, private val hFlag: Boolean, private val rFl
             size = toHumanReadableSize(file)
             rwx = rwx(file)
         }
-        val extraSpace = "           "
-        return if (rFlag) listOf(nameOfFile, lastModify, size, xxx, rwx).joinToString(extraSpace).replace(Regex("""[$extraSpace]+"""), extraSpace).trim()
-        else listOf(rwx, xxx, size, lastModify, nameOfFile).joinToString(extraSpace).replace(Regex("""[$extraSpace]+"""), extraSpace).trim()
+        return if (rFlag) listOf(nameOfFile, lastModify, size, xxx, rwx).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
+        else listOf(rwx, xxx, size, lastModify, nameOfFile).joinToString(" ").replace(Regex("""[ ]+"""), " ").trim()
     }
 
     private fun toFileList(file: File): ArrayList<File> {
