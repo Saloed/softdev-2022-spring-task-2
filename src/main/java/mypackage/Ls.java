@@ -17,119 +17,171 @@ import java.util.List;
 public class Ls {
 
     public static void main(String[] args) throws IOException {
+        LsArgs values = null;
         try {
-            LsArgs values = new LsArgs(args);
-            File folder = new File(values.getDirectory());
-            File[] list;
-
-            if (folder.isFile()) {
-                list = new File[]{folder};
-            } else {
-                list = folder.listFiles();
-            }
-
-            if (values.isReversed()) {
-                List<File> reversed = Arrays.asList(list);
-                Collections.reverse(reversed);
-                list = reversed.toArray(list);
-            }
-            String result = "";
-            if (!values.isLong()) {
-                result = getNames(list);
-            } else {
-                if (!values.isHumanReadable()) {
-                    result = getLongInfo(list);
-                } else {
-                    result = getHumanReadableInfo(list);
-                }
-            }
-
-            File output = values.getOutputFile();
-            if (output != null) {
-                try (FileWriter writer = new FileWriter(output)) {
-                    writer.write(result);
-                }
-            } else {
-                System.out.print(result);
-            }
+            values = new LsArgs(args);
         } catch (CmdLineException e) {
             System.err.println("Incorrect args");
+        }
+
+        if (values != null) {
+            argsHandling(values);
+        }
+    }
+
+    private static void argsHandling(LsArgs values) throws IOException {
+        File folder = new File(values.getDirectory());
+        File[] list;
+
+        if (folder.isFile()) {
+            list = new File[]{folder};
+        } else {
+            list = folder.listFiles();
+        }
+
+        if (values.isReversed()) {
+            List<File> reversed = Arrays.asList(list);
+            Collections.reverse(reversed);
+            list = reversed.toArray(list);
+        }
+
+        String result = "";
+        if (!values.isLong()) {
+            result = getNames(list);
+        } else {
+            FileInfo[] infoList = new FileInfo[list.length];
+            for (int i = 0; i < list.length; i++) {
+                boolean isReadable = list[i].canRead();
+                boolean isWriteable = list[i].canWrite();
+                boolean isExecutable = list[i].canExecute();
+
+                String name = list[i].getName();
+                Path path = Path.of(list[i].getAbsolutePath());
+                long size = Files.size(path);
+                FileTime lastModifiedTime = Files.getLastModifiedTime(path);
+
+                infoList[i] = new FileInfo(isReadable,
+                        isWriteable,
+                        isExecutable,
+                        name,
+                        size,
+                        lastModifiedTime);
+            }
+            if (!values.isHumanReadable()) {
+                //result = getLongInfo(infoList);
+                StringBuilder sb = new StringBuilder();
+                for (FileInfo fileInfo : infoList) {
+                    sb.append(fileInfo.getLong() + System.lineSeparator());
+                }
+                result = sb.toString();
+            } else {
+                //result = getHumanReadableInfo(infoList);
+                StringBuilder sb = new StringBuilder();
+                for (FileInfo fileInfo : infoList) {
+                    sb.append(fileInfo.getHumanReadable() + System.lineSeparator());
+                }
+                result = sb.toString();
+            }
+        }
+
+        File output = values.getOutputFile();
+        if (output != null) {
+            try (FileWriter writer = new FileWriter(output)) {
+                writer.write(result);
+            }
+        } else {
+            System.out.print(result);
         }
     }
 
     private static String getNames(File[] list) {
         StringBuilder sb = new StringBuilder();
-        for (File file : list)
-            sb.append(file.getName() + System.lineSeparator());
-
+        for (File file : list) sb.append(file.getName() + System.lineSeparator());
         return sb.toString();
     }
 
-    private static String getLongInfo(File[] list) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        for (File file : list) {
-            if (file.canRead()) sb.append(1);
-            else sb.append(0);
+    private static class FileInfo {
+        private boolean isReadable;
+        private boolean isWriteable;
+        private boolean isExecutable;
 
-            if (file.canWrite()) sb.append(1);
-            else sb.append(0);
+        private String name;
+        private long size;
+        private FileTime lastModifiedTime;
 
-            if (file.canExecute()) sb.append(1);
-            else sb.append(0);
+        public FileInfo(boolean isReadable,
+                        boolean isWriteable,
+                        boolean isExecutable,
+                        String name,
+                        long size,
+                        FileTime lastModifiedTime) {
+            this.isExecutable = isExecutable;
+            this.isReadable = isReadable;
+            this.isWriteable = isWriteable;
 
-            sb.append(" ");
-            Path path = Path.of(file.getAbsolutePath());
-            sb.append(Files.size(path));
-            sb.append(" ");
-            sb.append(Files.getLastModifiedTime(path));
-            sb.append(" ");
-            sb.append(file.getName() + System.lineSeparator());
+            this.name = name;
+            this.size = size;
+            this.lastModifiedTime = lastModifiedTime;
         }
-        return sb.toString();
-    }
 
-    private static String getHumanReadableInfo(File[] list) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        for (File file : list) {
-            if (file.canRead()) sb.append("r");
+        private String sizeForHuman() {
+            String[] namesList = new String[]{"б", "Кб", "Мб", "Гб", "Тб"};
+            long multiplier = 1024;
+            int index = 0;
+            long currentSize = size;
+            while (currentSize / multiplier > 0) {
+                index++;
+                currentSize = currentSize / multiplier;
+            }
+            if (index >= namesList.length) return "Too big size";
+            return currentSize + namesList[index];
+        }
+
+        private String timeForHuman() {
+            Date date = new Date(lastModifiedTime.toMillis());
+            String pattern = "d-MM-y";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            return simpleDateFormat.format(date);
+        }
+
+        public String getHumanReadable() {
+            StringBuilder sb = new StringBuilder();
+            if (isReadable) sb.append("r");
             else sb.append("-");
 
-            if (file.canWrite()) sb.append("w");
+            if (isWriteable) sb.append("w");
             else sb.append("-");
 
-            if (file.canExecute()) sb.append("x");
+            if (isExecutable) sb.append("x");
             else sb.append("-");
 
             sb.append(" ");
-            Path path = Path.of(file.getAbsolutePath());
-            long size = Files.size(path);
-            sb.append(sizeForHuman(size));
+            sb.append(sizeForHuman());
             sb.append(" ");
-            FileTime time = Files.getLastModifiedTime(path);
-            sb.append(timeForHuman(time));
+            sb.append(timeForHuman());
             sb.append(" ");
-            sb.append(file.getName() + System.lineSeparator());
+            sb.append(name);
+            return sb.toString();
         }
-        return sb.toString();
-    }
 
-    private static String timeForHuman(FileTime time) {
-        Date date = new Date(time.toMillis());
-        String pattern = "d-MM-y";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        return simpleDateFormat.format(date);
-    }
+        private String getLong() throws IOException {
+            StringBuilder sb = new StringBuilder();
+            if (isReadable) sb.append(1);
+            else sb.append(0);
 
-    private static String sizeForHuman(long size) {
-        String[] namesList = new String[]{"б", "Кб", "Мб", "Гб", "Тб"};
-        long multiplier = 1024;
-        int index = 0;
-        long currentSize = size;
-        while (currentSize / multiplier > 0) {
-            index++;
-            currentSize = currentSize / multiplier;
+            if (isWriteable) sb.append(1);
+            else sb.append(0);
+
+            if (isExecutable) sb.append(1);
+            else sb.append(0);
+
+            sb.append(" ");
+            sb.append(size);
+            sb.append(" ");
+            sb.append(lastModifiedTime);
+            sb.append(" ");
+            sb.append(name);
+            return sb.toString();
         }
-        if (index >= namesList.length) return "Too big size";
-        return currentSize + namesList[index];
     }
 }

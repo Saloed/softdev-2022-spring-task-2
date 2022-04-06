@@ -10,6 +10,8 @@ repositories {
 }
 
 jar {
+    duplicatesStrategy =
+            DuplicatesStrategy.EXCLUDE
     manifest {//обозначаем главный класс в jar
         attributes "Main-Class": "mypackage.Ls"
     }
@@ -24,4 +26,8 @@ dependencies {
     implementation('com.google.guava:guava:31.1-jre')
     implementation("org.kohsuke:file-leak-detector:1.8")
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.8.2')
+
+}
+tasks.test {
+    useJUnitPlatform()
 }
