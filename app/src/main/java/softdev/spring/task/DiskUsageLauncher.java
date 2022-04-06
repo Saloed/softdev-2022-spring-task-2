@@ -19,6 +19,9 @@ public class DiskUsageLauncher {
     @Option(name = "--si", usage = "base 1000 instead of 1024")
     private boolean si;
 
+    @Option(name = "--order", usage = "sort in ascending order")
+    private boolean order;
+
     @Argument(required = true)
     private List<String> listFiles;
 
@@ -33,7 +36,7 @@ public class DiskUsageLauncher {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            System.err.println("java -jar DiskUsage.jar -h -c --si File1 File2 File3...");
+            System.err.println("java -jar app.jar -h -c --si File1 File2 File3...");
             parser.printUsage(System.err);
             System.exit(1);
             return;
@@ -41,7 +44,7 @@ public class DiskUsageLauncher {
 
         DiskUsage dU = new DiskUsage();
         try {
-            dU.reply(h, c, si, listFiles);
+            dU.reply(h, c, si, order, listFiles);
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

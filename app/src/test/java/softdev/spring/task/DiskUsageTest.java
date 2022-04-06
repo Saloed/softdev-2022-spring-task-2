@@ -18,10 +18,11 @@ class DiskUsageTest {
         boolean c = true;
         boolean h = true;
         boolean si = false;
+        boolean order = false;
         List<String> a = new ArrayList<>();
         a.add("src/test/testFiles/img1.jpg");
         a.add("src/test/testFiles/pain.jpg");
-        dU.reply(h, c, si, a);
+        dU.reply(h, c, si, order, a);
         assertEquals("2,02 MB", dU.totalSizeString);
 
         a.remove("src/test/testFiles/img1.png");
@@ -36,9 +37,10 @@ class DiskUsageTest {
         boolean c = true;
         boolean h = true;
         boolean si = true;
+        boolean order = false;
         List<String> a = new ArrayList<>();
         a.add("src/test/testFiles/pain.jpg");
-        dU.reply(h, c, si, a);
+        dU.reply(h, c, si, order, a);
         assertEquals("223,07 KB", dU.totalSizeString);
     }
 
@@ -48,10 +50,12 @@ class DiskUsageTest {
         boolean c = false;
         boolean h = true;
         boolean si = false;
+        boolean order = true;
         List<String> a = new ArrayList<>();
+        a.add("src/test/testFiles/img1.jpg");
         a.add("src/test/testFiles/pain.jpg");
-        dU.reply(h, c, si, a);
-        assertEquals(List.of("pain.jpg 217,84 KB"), dU.fileInfo);
+        dU.reply(h, c, si, order, a);
+        assertEquals(List.of("pain.jpg 217,84 KB", "img1.jpg 1,81 MB"), dU.fileInfo);
     }
 
     @Test
@@ -60,9 +64,10 @@ class DiskUsageTest {
         boolean c = true;
         boolean h = false;
         boolean si = false;
+        boolean order = false;
         List<String> a = new ArrayList<>();
         a.add("src/test/testFiles/img1.jpg");
-        dU.reply(h, c, si, a);
+        dU.reply(h, c, si, order, a);
         assertEquals("1853,36", dU.totalSizeString);
     }
 
@@ -72,9 +77,10 @@ class DiskUsageTest {
         boolean c = false;
         boolean h = false;
         boolean si = false;
+        boolean order = false;
         List<String> a = new ArrayList<>();
         a.add("src/test/testFiles/pain.jpg");
-        assertEquals(0, dU.reply(h, c, si, a));
+        assertEquals(0, dU.reply(h, c, si, order, a));
     }
 
     @Test
@@ -83,9 +89,10 @@ class DiskUsageTest {
         boolean c = false;
         boolean h = false;
         boolean si = false;
+        boolean order = false;
         List<String> a = new ArrayList<>();
         a.add("src/test/testFiles/monkey.jpg");
-        assertEquals(1, dU.reply(h, c, si, a));
+        assertEquals(1, dU.reply(h, c, si, order, a));
     }
 
 }
