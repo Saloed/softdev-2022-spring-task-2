@@ -1,18 +1,12 @@
-package ciphore;
+package ciphxor;
 
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class XOR {
     @Option(name = "-c", metaVar = "Encryption")
@@ -27,7 +21,7 @@ public class XOR {
     @Argument(required = true, metaVar = "Input file name")
     private String inputFile;
 
-    public String cipher(String unencryptedFile, String keyInHex) throws IOException {
+    public byte[] cipher(byte[] unencryptedFile, String keyInHex) {
         String digits = "0123456789ABCDEF";
         keyInHex = keyInHex.toUpperCase();
         int keyInDec = 0;
@@ -37,13 +31,11 @@ public class XOR {
             keyInDec = 16 * keyInDec + d;
         }
 
-        char[] cipher = unencryptedFile.toCharArray();
-        StringBuilder builder = new StringBuilder();
-        for (char c : cipher) {
-            char ciphered = (char) ((int) c ^ keyInDec);
-            builder.append(ciphered);
+        byte[] newEncode = new byte[unencryptedFile.length];
+        for (int i = 0; i < unencryptedFile.length; i++) {
+            newEncode[i] = (byte) (unencryptedFile[i] ^ keyInDec);
         }
-        return builder.toString();
+        return newEncode;
     }
 
     private void launch(String[] args) {
@@ -54,24 +46,24 @@ public class XOR {
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
+            return;
         }
 
-       try {
-           Path path = Paths.get(inputFile);
-           String unencryptedFile = Files.readString(path, StandardCharsets.UTF_8);
+        if(encKey != null && decKey != null) return;
+
+        try {
+           FileInputStream input = new FileInputStream(inputFile);
+           byte[] unencryptedFile = input.readAllBytes();
            FileOutputStream output = new FileOutputStream(outputFile);
-           String res = cipher(unencryptedFile, encKey);
-           byte[] buffer = res.getBytes(StandardCharsets.UTF_8);
-           output.write(buffer, 0, buffer.length);
+           byte[] res = cipher(unencryptedFile, encKey);
+           output.write(res);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args)  {
-        System.out.println("Start");
         new XOR().launch(args);
-        System.out.println("Stop");
     }
 }
 
