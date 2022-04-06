@@ -36,6 +36,7 @@ class Find {
                 }
             }
         }
+
         if (result.isEmpty()) println("В текущей директории файл(-ы) не найдены")
         else println(result)
         return result
