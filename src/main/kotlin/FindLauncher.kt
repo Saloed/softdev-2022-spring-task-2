@@ -12,7 +12,7 @@ class FindLauncher {
     private val subdirectory: Boolean = false
 
     @Argument(required = true, metaVar = "FileName", usage = "Input file name")
-    private val fileName: List<String>? = null
+    private val fileNames: List<String>? = null
 
     fun launch(args: Array<String>) {
         val parser = CmdLineParser(this)
@@ -26,7 +26,7 @@ class FindLauncher {
         }
         val find1 = Find()
         try {
-            find1.find(directory!!, subdirectory, fileName!!)
+            find1.find(directory!!, subdirectory, fileNames!!)
         } catch (e: IOException) {
             System.err.println(e.message)
         }

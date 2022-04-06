@@ -15,9 +15,8 @@ class Find {
         if (!Files.exists(path1)) throw IOException("Такой директории не существует")
 
         if (!subdirectory) {
-            for (file in fileNames) {
-                val d1 = "$directory/$file"
-                val path = Path.of(d1)
+            for (file in fileNames.toSet()) {
+                val path = path1.resolve(file)
                 if (Files.exists(path)) {
                     result.add(file)
                 }
@@ -31,12 +30,11 @@ class Find {
                 if (currentFile.isDirectory) {
                     fileTree.addAll(currentFile.listFiles()!!)
                 } else {
-                    if (currentFile.name in fileNames) {
+                    if (fileNames.toSet().contains(currentFile.name)) {
                         result.add(currentFile.name)
                     }
                 }
             }
-
         }
         if (result.isEmpty()) println("В текущей директории файл(-ы) не найдены")
         else println(result)
