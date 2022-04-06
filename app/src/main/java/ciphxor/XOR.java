@@ -56,6 +56,7 @@ public class XOR {
            byte[] unencryptedFile = input.readAllBytes();
            FileOutputStream output = new FileOutputStream(outputFile);
            byte[] res = cipher(unencryptedFile, encKey);
+           if (encKey == null) res = cipher(unencryptedFile, decKey);
            output.write(res);
         } catch (IOException e) {
             e.printStackTrace();
