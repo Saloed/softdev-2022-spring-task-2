@@ -27,7 +27,7 @@
    [INFO] 
    [INFO] Results:
    [INFO] 
-   [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+   [INFO] ls.Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
    [INFO] 
    [INFO] ------------------------------------------------------------------------
    [INFO] BUILD SUCCESS

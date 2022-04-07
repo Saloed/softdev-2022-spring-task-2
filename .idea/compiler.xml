@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="ls" target="16" />
+      <module name="ls.main" target="16" />
+      <module name="ls.test" target="16" />
+      <module name="lss" target="16" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
