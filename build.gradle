@@ -22,7 +22,6 @@ jar {
         attributes 'Main-Class': 'packrle.PackRLE'
     }
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    archiveBaseName = "pack-rle"
 }
 
 test {
