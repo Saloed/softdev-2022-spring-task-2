@@ -28,7 +28,7 @@ class LsTest {
     private void before() throws URISyntaxException {
         output = getFileFromResourses("output.txt");
         dir =  getFileFromResourses("testdir");
-
+        System.out.println("working before");
     }
 
     @Test
@@ -36,13 +36,13 @@ class LsTest {
         String[] args1 = {"-o", output.getAbsolutePath(), dir.getAbsolutePath()};
         Ls.main(args1);
 
-        assertEquals("hhh\r\ninput.txt", getTextFromFile(output).trim());
+        assertEquals("h.txt\r\ninput.txt", getTextFromFile(output).trim());
 
 
-        File file =  getFileFromResourses("testdir/hhh");
+        File file =  getFileFromResourses("testdir/h.txt");
         String[] args2 = {"-o", output.getAbsolutePath(), file.getAbsolutePath()};
         Ls.main(args2);
 
-        assertEquals("hhh", getTextFromFile(output).trim());
+        assertEquals("h.txt", getTextFromFile(output).trim());
     }
 }
