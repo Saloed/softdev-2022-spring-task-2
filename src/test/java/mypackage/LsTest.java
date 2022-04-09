@@ -38,6 +38,7 @@ class LsTest {
 
         assertEquals("hhh\r\ninput.txt", getTextFromFile(output).trim());
 
+
         File file =  getFileFromResourses("testdir/hhh");
         String[] args2 = {"-o", output.getAbsolutePath(), file.getAbsolutePath()};
         Ls.main(args2);
