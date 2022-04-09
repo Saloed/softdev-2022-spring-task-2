@@ -28,6 +28,7 @@ class LsTest {
     private void before() throws URISyntaxException {
         output = getFileFromResourses("output.txt");
         dir =  getFileFromResourses("testdir");
+
     }
 
     @Test
