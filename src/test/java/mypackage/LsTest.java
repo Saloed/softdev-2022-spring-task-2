@@ -43,5 +43,4 @@ class LsTest {
 
         assertEquals("hhh", getTextFromFile(output).trim());
     }
-
 }
