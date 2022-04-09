@@ -10,9 +10,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LsTest {
+    File output;
+    File dir;
+
     private File getFileFromResourses(String fileName) throws URISyntaxException {
         URL url = getClass().getClassLoader().getResource(fileName);
         return new File(url.toURI());
@@ -21,14 +24,11 @@ class LsTest {
     private String getTextFromFile(File file) throws IOException {
         return Files.readString(file.toPath());
     }
-    File output;
-    File dir;
 
     @BeforeEach
     private void before() throws URISyntaxException {
         output = getFileFromResourses("output.txt");
-        dir =  getFileFromResourses("testdir");
-        System.out.println("working before");
+        dir = getFileFromResourses("testdir");
     }
 
     @Test
@@ -36,10 +36,13 @@ class LsTest {
         String[] args1 = {"-o", output.getAbsolutePath(), dir.getAbsolutePath()};
         Ls.main(args1);
 
-        assertEquals("h.txt\r\ninput.txt", getTextFromFile(output).trim());
+        String exp = "h.txt\r\ninput.txt";
+        String actual = getTextFromFile(output).trim();
+        System.out.println(exp + "\n\n" + actual);
+        assertEquals(exp, actual);
 
 
-        File file =  getFileFromResourses("testdir/h.txt");
+        File file = getFileFromResourses("testdir/h.txt");
         String[] args2 = {"-o", output.getAbsolutePath(), file.getAbsolutePath()};
         Ls.main(args2);
 
