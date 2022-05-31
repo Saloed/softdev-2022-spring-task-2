@@ -31,7 +31,7 @@ class CombiningStringsTest {
 
     @Test
     void ignoreN() throws IOException, CmdLineException {
-        CombiningStrings.main("-s 4 -o files\\output\\output3.txt files\\input\\input3.txt".split(" "));
+        CombiningStrings.main("-s 3 -o files\\output\\output3.txt files\\input\\input3.txt".split(" "));
         assertEquals(
                 Files.readString(Path.of("files\\result\\result3.txt")),
                 Files.readString(Path.of("files\\output\\output3.txt"))

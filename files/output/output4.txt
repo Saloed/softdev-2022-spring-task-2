@@ -1,8 +1,7 @@
-3Better
-3a
-1new
-1friend
-1than
-1an
-1old
-2foe
+
+
+new
+friend
+than
+an
+old
