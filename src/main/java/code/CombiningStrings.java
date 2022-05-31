@@ -2,8 +2,12 @@ package code;
 
 import org.kohsuke.args4j.CmdLineException;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,70 +31,55 @@ import java.util.List;
 
 public class CombiningStrings {
 
-    public static void main(String[] args, int number) throws CmdLineException, IOException, NullPointerException {
+    public static void main(String[] args) throws CmdLineException, IOException, NullPointerException {
         UniqParse arguments = new UniqParse(args);
-        FileWriter fw = new FileWriter("C:\\Users\\danii\\IdeaProjects\\softdev-2022-spring-task-2\\.idea\\output.txt");
-        BufferedWriter bw = new BufferedWriter(fw);
-        try {
-            for (String s : arguments.inputFileName()) {
+        List<String> resultLines = new ArrayList<>();
+        List<Integer> resultNumbers = new ArrayList<>();
+        List<String> lines = Files.readAllLines(Path.of(arguments.inputFileName()));
 
-                if (arguments.ignoreCase()) {
-                    List<String> lines = Files.readAllLines(new File(s).toPath());
-                    String lastLine = "";
-                    for (String line : lines) {
-                        if (line.equalsIgnoreCase(lastLine)) {
-                            lastLine = line;
-                            bw.write(line);
-                            bw.newLine();
-                        }
-                    }
-                }
-
-                if (arguments.ignoreN()) {
-                    List<String> lines = Files.readAllLines(new File(s).toPath());
-                    String lastLine = "";
-                    for (String line : lines) {
-                        ignore(line, lastLine, number);
-                        bw.write(line.substring(number));
-                        bw.newLine();
-                    }
-                }
-
-                if (arguments.uniqueStrings()) {
-                    List<String> lines = Files.readAllLines(new File(s).toPath());
-                    String lastLine = "";
-                    for (String line : lines) {
-                        if (!line.equals(lastLine)) {
-                            bw.write(line);
-                            bw.newLine();
-                        }
-                    }
-                }
-
-                if (arguments.numOfStrings()) {
-                    List<String> lines = Files.readAllLines(new File(s).toPath());
-                    String lastLine = "";
-                    int sameStrings = 0;
-                    for (String line : lines) {
-                        if (line.equals(lastLine)) {
-                            sameStrings += 1;
-                        }
-                        bw.write(sameStrings);
-                        bw.write(line);
-                        bw.newLine();
-                    }
-                }
+        for (String line : lines) {
+            if (resultLines.isEmpty()) {
+                resultLines.add(line);
+                resultNumbers.add(1);
+                continue;
             }
-        } catch (NullPointerException e) {
-            System.out.println("ERROR " + e.getMessage());
+            if (equalsIgnoreCaseOrNot(
+                    line.substring(arguments.ignoreN()),
+                    resultLines.get(resultLines.size() - 1).substring(arguments.ignoreN()),
+                    arguments.ignoreCase()
+            )) {
+                int num = resultNumbers.remove(resultNumbers.size() - 1);
+                resultNumbers.add(num + 1);
+            } else {
+                resultLines.add(line);
+                resultNumbers.add(1);
+            }
         }
+        File outputFile = new File(arguments.outputFileName());
+        //outputFile.createNewFile();
+        BufferedWriter bw = Files.newBufferedWriter(outputFile.toPath());
+
+        for (int i = 0; i < resultLines.size(); i++) {
+            bw.write(reformatString(
+                    resultLines.get(i),
+                    resultNumbers.get(i),
+                    arguments.uniqueStrings(),
+                    arguments.numOfStrings())
+            );
+            if (i != resultLines.size() - 1) bw.newLine();
+        }
+        bw.close();
     }
 
-    private static void ignore(String lineOne, String lineTwo, int count) {
-        lineOne.substring(count).equals(lineTwo.substring(count));
+    private static boolean equalsIgnoreCaseOrNot(String s1, String s2, boolean ignoreCase) {
+        if (ignoreCase) return s1.equalsIgnoreCase(s2);
+        else return s1.equals(s2);
     }
 
-    private static void ignoreN(String lineOne, String lineTwo, int number) {
-
+    private static String reformatString(String line, int lineNumber, boolean uniqueStrings, boolean numberPrefix) {
+        String string = line;
+        if (numberPrefix) string = lineNumber + string;
+        if (uniqueStrings && lineNumber > 1) string = "";
+        return string;
     }
 }

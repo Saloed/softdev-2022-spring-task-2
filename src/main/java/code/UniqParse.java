@@ -14,7 +14,7 @@ public class UniqParse {
     private boolean i;
 
     @Option(name = "-s", metaVar = "ignore")
-    private boolean s;
+    private int s;
 
     @Option(name = "-u", metaVar = "uniqueStrings")
     private boolean u;
@@ -23,7 +23,7 @@ public class UniqParse {
     private boolean c;
 
     @Argument(metaVar = "inputName", usage = "Name of input file(s)", multiValued = true)
-    private String[] input;
+    private String input;
 
     public UniqParse(String[] args) throws CmdLineException {
         CmdLineParser parser = new CmdLineParser(this);
@@ -34,11 +34,11 @@ public class UniqParse {
         }
     }
 
-    public String[] inputFileName() {
+    public String inputFileName() {
         return input;
     }
 
-    public String fileName() {
+    public String outputFileName() {
         return ofile;
     }
 
@@ -46,7 +46,7 @@ public class UniqParse {
         return i;
     }
 
-    public boolean ignoreN() {
+    public int ignoreN() {
         return s;
     }
 
