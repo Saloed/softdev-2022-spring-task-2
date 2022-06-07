@@ -25,4 +25,5 @@ class Grep {
     private fun isToLowercase(i: Boolean, s: String): String {
         return if (i) s.lowercase() else s
     }
+
 }
